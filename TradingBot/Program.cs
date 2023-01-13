@@ -6,7 +6,7 @@ namespace TradingBot
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -16,6 +16,9 @@ namespace TradingBot
 
             var app = builder.Build();
 
+            //forced to be development for now
+            app.Environment.EnvironmentName = "Development";
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -24,11 +27,14 @@ namespace TradingBot
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
 
             app.MapControllers();
+            app.MapGet("/Environment", () =>
+            {
+                return new EnvironmentInfo();
+            });
 
             app.Run();
         }
