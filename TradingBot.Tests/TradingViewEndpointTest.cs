@@ -16,13 +16,11 @@ namespace TradingBot.Tests
         [Fact]
         public async Task ReturnsSuccessWhenInvokedWithCorrectParameters()
         {
-
             //Arrange
             //done in the constructor
 
             // Act
-            HttpResponseMessage response = await _client.GetAsync("theTradingViewEndPoint address");
-            _testOutputHelper.WriteLine("This is a log from the test output helper");
+            HttpResponseMessage response = await _client.GetAsync("/tradingview");
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
