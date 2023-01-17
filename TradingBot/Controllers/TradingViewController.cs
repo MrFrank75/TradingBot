@@ -27,14 +27,14 @@ namespace TradingBot.Controllers
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine(jsonMessage.AssetId);
-                System.Diagnostics.Debug.WriteLine(jsonMessage.UserId);
-                System.Diagnostics.Debug.WriteLine(jsonMessage.TradeAction);
+                _logger.LogInformation(jsonMessage.AssetId);
+                _logger.LogInformation(jsonMessage.UserId);
+                _logger.LogInformation(jsonMessage.TradeAction);
                 return Ok();
             }
             catch(Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                _logger.LogInformation(ex.Message);
                 return BadRequest();
             }
         }
