@@ -34,7 +34,7 @@ namespace TradingBot.Controllers
             }
             catch(Exception ex)
             {
-                _logger.LogInformation(ex.Message);
+                _logger.LogError(ex.Message);
                 return BadRequest();
             }
         }
