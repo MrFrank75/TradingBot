@@ -16,7 +16,7 @@ In case you, like me, are using AWS, you can find how to do it here: https://doc
 The basic steps (for AWS) are
 
 - Create a repository entry for the docker image in AWS ECR
-- Push the image you built before to the ECR registry
+- Push the image you built before onto the ECR registry
 
 ## Run the image using AWS Fargate
 Once again this applies if you, like me, are using AWS.
