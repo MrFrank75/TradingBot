@@ -19,12 +19,12 @@ namespace TradingBot.Tests
 
         protected override IHost CreateHost(IHostBuilder builder)
         {
+
             builder.UseEnvironment("Development");
             builder.ConfigureLogging(logBuilder =>
             {
                 logBuilder.Services.AddSingleton<ILoggerProvider>(serviceProvider => new XUnitLoggerProvider(_testOutputHelper));
             });
-
             return base.CreateHost(builder);
         }
     }

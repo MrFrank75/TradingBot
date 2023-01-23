@@ -25,5 +25,6 @@ namespace TradingBot.Tests
             // Assert
             Assert.True(response.IsSuccessStatusCode);
         }
+
     }
 }

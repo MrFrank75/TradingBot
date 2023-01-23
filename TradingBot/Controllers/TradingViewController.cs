@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using System.Net.WebSockets;
+using System.Text;
 
 namespace TradingBot.Controllers
 {
@@ -9,14 +11,16 @@ namespace TradingBot.Controllers
     public class TradingViewController : ControllerBase
     {
         private readonly ILogger<TradingViewController> _logger;
+        private readonly IBinanceConnector binanceConnector;
 
-        public TradingViewController(ILogger<TradingViewController> logger)
+        public TradingViewController(ILogger<TradingViewController> logger, IBinanceConnector binanceConnector)
         {
             _logger = logger;
+            this.binanceConnector = binanceConnector;
         }
 
-        [HttpGet(Name = "GetTradesOpen")]
-        public IEnumerable<string> Get()
+        [HttpGet]
+        public async Task<IEnumerable<string>> Get()
         {
             return new List<string>();
         }
