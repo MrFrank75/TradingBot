@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Data.Common;
 using TradingBot.Tests.XUnitUtilities;
 using Xunit.Abstractions;
 
@@ -19,7 +21,6 @@ namespace TradingBot.Tests
 
         protected override IHost CreateHost(IHostBuilder builder)
         {
-
             builder.UseEnvironment("Development");
             builder.ConfigureLogging(logBuilder =>
             {
