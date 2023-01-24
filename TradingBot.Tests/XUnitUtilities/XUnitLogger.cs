@@ -2,7 +2,7 @@
 using System.Text;
 using Xunit.Abstractions;
 
-namespace TradingBot.Tests.XUnitUtilities
+namespace TradingBot.WebAPI.IntegrationTests.XUnitUtilities
 {
     internal class XUnitLogger : ILogger
     {

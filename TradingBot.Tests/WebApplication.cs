@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Data.Common;
-using TradingBot.Tests.XUnitUtilities;
+using TradingBot.WebAPI.IntegrationTests.XUnitUtilities;
 using Xunit.Abstractions;
 
-namespace TradingBot.Tests
+namespace TradingBot.WebAPI.IntegrationTests
 {
     public class WebApplication : WebApplicationFactory<Program>
     {

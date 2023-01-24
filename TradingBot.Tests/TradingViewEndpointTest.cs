@@ -1,6 +1,6 @@
 using Xunit.Abstractions;
 
-namespace TradingBot.Tests
+namespace TradingBot.WebAPI.IntegrationTests
 {
     public class TradingViewEndpointTest
     {

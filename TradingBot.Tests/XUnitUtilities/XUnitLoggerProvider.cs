@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace TradingBot.Tests.XUnitUtilities
+namespace TradingBot.WebAPI.IntegrationTests.XUnitUtilities
 {
     internal sealed class XUnitLoggerProvider : ILoggerProvider
     {
