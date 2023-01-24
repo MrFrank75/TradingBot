@@ -5,14 +5,20 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot", "TradingBot\TradingBot.csproj", "{6F647887-D925-42C6-98A9-DEE84D8E0767}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Tests", "TradingBot.Tests\TradingBot.Tests.csproj", "{DBFD947F-B82A-4F64-A9DD-EB64D386F6E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.WebAPI.IntegrationTests", "TradingBot.Tests\TradingBot.WebAPI.IntegrationTests.csproj", "{DBFD947F-B82A-4F64-A9DD-EB64D386F6E9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E30D5D60-D450-4D5A-BC11-ED6C8F5118A9}"
 	ProjectSection(SolutionItems) = preProject
 		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBot.UnitTests", "TradingBot.UnitTests\TradingBot.UnitTests.csproj", "{2D0808A0-C86D-49BA-8A1C-61750BC7931C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Backend.IntegrationTests", "TradingBot.UnitTests\TradingBot.Backend.IntegrationTests.csproj", "{2D0808A0-C86D-49BA-8A1C-61750BC7931C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "..\binance-connector-dotnet\Src\Common\Common.csproj", "{762BD54F-808C-4BEC-BF6C-A9384C37C0B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Binance-connector-dotnet", "Binance-connector-dotnet", "{41DAC70A-C5B2-401B-8BFF-A390F188CA40}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spot", "..\binance-connector-dotnet\Src\Spot\Spot.csproj", "{F07025D9-F6F9-476F-93D9-C4AFF111BDD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +38,21 @@ Global
 		{2D0808A0-C86D-49BA-8A1C-61750BC7931C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D0808A0-C86D-49BA-8A1C-61750BC7931C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D0808A0-C86D-49BA-8A1C-61750BC7931C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{762BD54F-808C-4BEC-BF6C-A9384C37C0B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{762BD54F-808C-4BEC-BF6C-A9384C37C0B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{762BD54F-808C-4BEC-BF6C-A9384C37C0B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{762BD54F-808C-4BEC-BF6C-A9384C37C0B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F07025D9-F6F9-476F-93D9-C4AFF111BDD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F07025D9-F6F9-476F-93D9-C4AFF111BDD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F07025D9-F6F9-476F-93D9-C4AFF111BDD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F07025D9-F6F9-476F-93D9-C4AFF111BDD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{762BD54F-808C-4BEC-BF6C-A9384C37C0B6} = {41DAC70A-C5B2-401B-8BFF-A390F188CA40}
+		{F07025D9-F6F9-476F-93D9-C4AFF111BDD3} = {41DAC70A-C5B2-401B-8BFF-A390F188CA40}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {808F7FC3-2935-40AB-B55A-91737BF3EF66}

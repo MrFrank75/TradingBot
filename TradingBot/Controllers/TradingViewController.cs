@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using System.Net.WebSockets;
 using System.Text;
+using TradingBot.BinanceServices;
 
 namespace TradingBot.Controllers
 {
@@ -11,9 +12,9 @@ namespace TradingBot.Controllers
     public class TradingViewController : ControllerBase
     {
         private readonly ILogger<TradingViewController> _logger;
-        private readonly IBinanceConnector binanceConnector;
+        private readonly IBinanceConnectorWrapper binanceConnector;
 
-        public TradingViewController(ILogger<TradingViewController> logger, IBinanceConnector binanceConnector)
+        public TradingViewController(ILogger<TradingViewController> logger, IBinanceConnectorWrapper binanceConnector)
         {
             _logger = logger;
             this.binanceConnector = binanceConnector;

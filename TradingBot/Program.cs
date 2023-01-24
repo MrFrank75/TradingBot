@@ -1,4 +1,6 @@
 
+using TradingBot.BinanceServices;
+
 namespace TradingBot
 {
     public class Program
@@ -13,7 +15,7 @@ namespace TradingBot
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<IBinanceConnector, BinanceConnector>();
+            builder.Services.AddScoped<IBinanceConnectorWrapper, BinanceConnectorWrapper>();
 
             var app = builder.Build();
 
