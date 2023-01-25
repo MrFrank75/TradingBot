@@ -85,13 +85,38 @@ namespace TradingBot.Tests.Integration
 
 
 
-        public async Task CanSubscribeToMultipleStream()
+        [Fact]
+        public async Task CanReceiveOrderBookMessages_WhenListeningToOrderBook()
         {
-            var sut = new BinanceConnectorWrapper(NullLogger<BinanceConnectorWrapper>.Instance);
+            //ARRANGE
+            var sut = new BinanceConnectorWrapper(_logger);
             var cancellationTokenSource = new CancellationTokenSource();
+            var stream = "btcusdt@depth@500ms";
+            var tasks = new List<Task>();
 
-            var stream2 = "{\r\n\"method\": \"SUBSCRIBE\",\r\n\"params\":\r\n[\r\n\"ethusdt@aggTrade\",\r\n\"ethusdt@depth\"\r\n],\r\n\"id\": 1\r\n}";
-            int result = await sut.ListenToSingleStream(stream2, cancellationTokenSource.Token);
+            //ACT
+            Task<int> taskListen = sut.ListenToOrderBook(stream, cancellationTokenSource.Token);
+            Task taskCountingMessage = Task.Run(async () =>
+            {
+                while (sut.OrderBookMessages.Count < 20)
+                {
+                    await Task.Delay(1000);
+                }
+                cancellationTokenSource.Cancel();
+            });
+
+            tasks.Add(taskCountingMessage);
+            tasks.Add(taskListen);
+
+            var taskResult = Task.WhenAll(tasks);
+            try
+            {
+                await taskResult;
+            }
+            catch { }
+
+            //ASSERT
+            Assert.True(sut.OrderBookMessages.Count >= 2);
         }
 
 
