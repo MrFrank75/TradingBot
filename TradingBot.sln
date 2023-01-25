@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Binance-connector-dotnet", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spot", "..\binance-connector-dotnet\Src\Spot\Spot.csproj", "{F07025D9-F6F9-476F-93D9-C4AFF111BDD3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Tests.Integration", "TradingBot.WebAPI.IntegrationTests\TradingBot.Tests.Integration.csproj", "{53FA20A2-4F52-4534-A6EF-6A977E001E20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Tests.Integration", "TradingBot.Tests.Integration\TradingBot.Tests.Integration.csproj", "{6DD3A87D-764E-478E-A0CC-4B8E62900A33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,10 +36,10 @@ Global
 		{F07025D9-F6F9-476F-93D9-C4AFF111BDD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F07025D9-F6F9-476F-93D9-C4AFF111BDD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F07025D9-F6F9-476F-93D9-C4AFF111BDD3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53FA20A2-4F52-4534-A6EF-6A977E001E20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53FA20A2-4F52-4534-A6EF-6A977E001E20}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53FA20A2-4F52-4534-A6EF-6A977E001E20}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53FA20A2-4F52-4534-A6EF-6A977E001E20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DD3A87D-764E-478E-A0CC-4B8E62900A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DD3A87D-764E-478E-A0CC-4B8E62900A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DD3A87D-764E-478E-A0CC-4B8E62900A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DD3A87D-764E-478E-A0CC-4B8E62900A33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
