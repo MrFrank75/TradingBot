@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using TradingBot.WebAPI.IntegrationTests.XUnitUtilities;
+using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
 
-namespace TradingBot.WebAPI.IntegrationTests
+namespace TradingBot.Tests.Integration
 {
     public class WebApplication : WebApplicationFactory<Program>
     {

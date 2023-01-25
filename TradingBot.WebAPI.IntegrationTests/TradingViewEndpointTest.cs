@@ -1,6 +1,7 @@
+using TradingBot.Tests.Integration;
 using Xunit.Abstractions;
 
-namespace TradingBot.WebAPI.IntegrationTests
+namespace TradingBot.Tests.Integration
 {
     public class TradingViewEndpointTest
     {

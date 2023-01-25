@@ -5,21 +5,23 @@ namespace TradingBot.BinanceServices
 {
     public class BinanceConnectorWrapper : IBinanceConnectorWrapper
     {
-        private readonly ILogger<IBinanceConnectorWrapper> logger;
+        private readonly string BaseUrl;
+        private readonly ILogger<IBinanceConnectorWrapper> _logger;
         private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
 
-        public BinanceConnectorWrapper(ILogger<BinanceConnectorWrapper> logger)
+        public BinanceConnectorWrapper(ILogger<BinanceConnectorWrapper> logger, string baseUrl = "wss://stream.binancefuture.com")
         {
-            this.logger = logger;
+            this.BaseUrl = baseUrl;
+            this._logger = logger;
         }
 
         public ConcurrentQueue<string> Messages { get => messages; }
 
         public async Task<int> ListenToSingleStream(string stream, CancellationToken token)
         {
-
+            _logger.LogInformation("ListenToSingleStream started");
             string receivedMessage = string.Empty;
-            MarketDataWebSocket dws = new MarketDataWebSocket(stream, "wss://stream.binancefuture.com");
+            MarketDataWebSocket dws = new MarketDataWebSocket(stream, BaseUrl);
 
             //1) register to the message received
             dws.OnMessageReceived(MessageReceived, token);
@@ -28,10 +30,11 @@ namespace TradingBot.BinanceServices
             await dws.ConnectAsync(token);
 
             //3) SEND a subscription request to start receiving data
-            Task result = dws.SendAsync(stream, token);
+            Task result = dws.SendAsync("emptyParam", token);
             result.Wait();
-            if (result.IsCompletedSuccessfully == false)
+            if (result.IsCompletedSuccessfully == false) {
                 throw new Exception("Send failed");
+            }
 
             while (token.IsCancellationRequested == false)
             { 
@@ -47,7 +50,7 @@ namespace TradingBot.BinanceServices
         private Task MessageReceived(string receivedMessage)
         {
             messages.Enqueue(receivedMessage);
-            System.Diagnostics.Debug.WriteLine(receivedMessage);
+            _logger.LogInformation(receivedMessage+"\r\n");
             return Task.CompletedTask;
         }
     }

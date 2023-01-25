@@ -1,15 +1,11 @@
-using Binance.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using TradingBot.Backend.IntegrationTests.XUnitUtilities;
 using TradingBot.BinanceServices;
+using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
-namespace TradingBot.Backend.IntegrationTests
+namespace TradingBot.Tests.Integration
 {
-
-
 
     public class BinanceConnectorTest
     {
@@ -31,7 +27,8 @@ namespace TradingBot.Backend.IntegrationTests
 
             //ACT
             Task<int> taskListen = sut.ListenToSingleStream(stream, cancellationTokenSource.Token);
-            Task taskCancelToken = Task.Run(async () => {
+            Task taskCancelToken = Task.Run(async () =>
+            {
                 await Task.Delay(5000);
                 cancellationTokenSource.Cancel();
             });
@@ -42,7 +39,7 @@ namespace TradingBot.Backend.IntegrationTests
             var taskResult = Task.WhenAll(tasks);
             try
             {
-                taskResult.Wait();
+                await taskResult;
             }
             catch { }
 
@@ -62,13 +59,14 @@ namespace TradingBot.Backend.IntegrationTests
 
             //ACT
             Task<int> taskListen = sut.ListenToSingleStream(stream, cancellationTokenSource.Token);
-            Task taskCountingMessage = Task.Run(async () => {
-                    while (sut.Messages.Count < 5)
-                    {
-                        await Task.Delay(1000);
-                    }
-                    cancellationTokenSource.Cancel();
-                });
+            Task taskCountingMessage = Task.Run(async () =>
+            {
+                while (sut.Messages.Count < 5)
+                {
+                    await Task.Delay(1000);
+                }
+                cancellationTokenSource.Cancel();
+            });
 
             tasks.Add(taskCountingMessage);
             tasks.Add(taskListen);
@@ -76,12 +74,12 @@ namespace TradingBot.Backend.IntegrationTests
             var taskResult = Task.WhenAll(tasks);
             try
             {
-                taskResult.Wait();
+                await taskResult;
             }
             catch { }
 
             //ASSERT
-            Assert.True(sut.Messages.Count>=2);
+            Assert.True(sut.Messages.Count >= 2);
         }
 
 
@@ -91,7 +89,7 @@ namespace TradingBot.Backend.IntegrationTests
         {
             var sut = new BinanceConnectorWrapper(NullLogger<BinanceConnectorWrapper>.Instance);
             var cancellationTokenSource = new CancellationTokenSource();
-            
+
             var stream2 = "{\r\n\"method\": \"SUBSCRIBE\",\r\n\"params\":\r\n[\r\n\"ethusdt@aggTrade\",\r\n\"ethusdt@depth\"\r\n],\r\n\"id\": 1\r\n}";
             int result = await sut.ListenToSingleStream(stream2, cancellationTokenSource.Token);
         }
