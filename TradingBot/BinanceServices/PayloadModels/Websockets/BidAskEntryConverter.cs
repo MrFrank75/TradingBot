@@ -25,8 +25,8 @@ namespace TradingBot.BinanceServices.PayloadModels.Websockets
                 // Finally I'm deserializing the value into an actual object
                 var p = JsonConvert.DeserializeObject<List<string>>(entry.ToString());
                 var bidAskEntry = new BidAskEntry();
-                bidAskEntry.PriceLevel = p[0];
-                bidAskEntry.Quantity = p[1];
+                bidAskEntry.PriceLevel = Convert.ToDouble(p[0].Replace(".",","));
+                bidAskEntry.Quantity = Convert.ToDouble(p[1].Replace(".", ","));
                 response.Add(bidAskEntry);
             }
             return response;

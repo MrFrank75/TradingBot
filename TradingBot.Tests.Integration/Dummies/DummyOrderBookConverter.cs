@@ -16,7 +16,7 @@ namespace TradingBot.Tests.Integration.Dummies
             //do nothing
         }
 
-        public void PopulateFromSnapshot(OrderBookAPISnapshot initialSnapshot, List<OrderBookEntry> entries)
+        public void PopulateFromSnapshot(OrderBookAPISnapshot initialSnapshot, List<OrderBookEntry> entries, int priceGranularity)
         {
             //do nothing
         }

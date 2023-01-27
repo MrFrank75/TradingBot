@@ -33,7 +33,7 @@ namespace TradingBot.BinanceServices
                     throw new Exception("the returned initial Order book snapshot was null. This was unexpected.");
                 }
 
-                _orderBookConverter.PopulateFromSnapshot(initialSnapshot, Entries);
+                _orderBookConverter.PopulateFromSnapshot(initialSnapshot, Entries, 100);
 
                 //keep adding up order book entries as they come, until cancellation is requested
                 while (cancellationToken.IsCancellationRequested == false)
