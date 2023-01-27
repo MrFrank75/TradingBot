@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using TradingBot.BinanceServices.PayloadModels.API;
 
 namespace TradingBot.BinanceServices
@@ -7,13 +8,15 @@ namespace TradingBot.BinanceServices
     {
         private readonly ILogger<BinanceOrderBook> _logger;
         private readonly IBinanceConnectorWrapper _binanceConnectorWrapper;
+        private readonly IOrderBookConverter _orderBookConverter;
 
         public List<OrderBookEntry> Entries { get; private set; }
 
-        public BinanceOrderBook(ILogger<BinanceOrderBook> logger, IBinanceConnectorWrapper binanceConnectorWrapper)
+        public BinanceOrderBook(ILogger<BinanceOrderBook> logger, IBinanceConnectorWrapper binanceConnectorWrapper, IOrderBookConverter orderBookConverter)
         {
-            this._logger = logger;
-            this._binanceConnectorWrapper = binanceConnectorWrapper;
+            _logger = logger;
+            _binanceConnectorWrapper = binanceConnectorWrapper;
+            _orderBookConverter = orderBookConverter;
         }
 
         public async Task Populate(string symbol, CancellationToken cancellationToken) {
@@ -30,13 +33,13 @@ namespace TradingBot.BinanceServices
                     throw new Exception("the returned initial Order book snapshot was null. This was unexpected.");
                 }
 
-                PopulateEntryListFromInitialOrderBookSnapshot(initialSnapshot, Entries);
+                _orderBookConverter.PopulateFromSnapshot(initialSnapshot, Entries);
 
                 //keep adding up order book entries as they come, until cancellation is requested
                 while (cancellationToken.IsCancellationRequested == false)
                 {
                     Task.Delay(10).Wait();  //give some rest to the CPU
-                    PopulateEntryListWithCurrentlyAvailableData(_binanceConnectorWrapper.OrderBookMessages, Entries);
+                    _orderBookConverter.PopulateFromBidAskEntries(_binanceConnectorWrapper.OrderBookMessages, Entries);
                 }
 
             }
@@ -48,14 +51,5 @@ namespace TradingBot.BinanceServices
             _logger.LogInformation("Populate has been correctly terminated");
         }
 
-        private void PopulateEntryListWithCurrentlyAvailableData(ConcurrentQueue<string> orderBookMessages, List<OrderBookEntry> orderBookToUpdate)
-        {
-            return;
-        }
-
-        private void PopulateEntryListFromInitialOrderBookSnapshot(OrderBookAPISnapshot initialSnapshot, List<OrderBookEntry> orderBookToUpdate)
-        {
-            return;
-        }
     }
 }

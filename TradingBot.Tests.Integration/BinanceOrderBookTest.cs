@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using TradingBot.BinanceServices;
+using TradingBot.Tests.Integration.Dummies;
 using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
 
@@ -22,10 +23,10 @@ namespace TradingBot.Tests.Integration
             //ARRANGE
             var cancellationTokenSource = new CancellationTokenSource();
             var binanceConnectorWrapper = new BinanceConnectorWrapper(_loggerConnector);
+            var orderBookConverter = new DummyOrderBookConverter();
             var symbol = "BTCUSDT";
             var tasks = new List<Task>();
-            var sut = new BinanceOrderBook(_logger, binanceConnectorWrapper);
-
+            var sut = new BinanceOrderBook(_logger, binanceConnectorWrapper, orderBookConverter);
 
             //ACT
             Task populateOrderBook = sut.Populate(symbol,cancellationTokenSource.Token);
