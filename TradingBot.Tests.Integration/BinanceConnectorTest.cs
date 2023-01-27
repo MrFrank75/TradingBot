@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using TradingBot.BinanceServices;
+using TradingBot.BinanceServices.PayloadModels.API;
 using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
 
@@ -95,7 +95,7 @@ namespace TradingBot.Tests.Integration
             var tasks = new List<Task>();
 
             //ACT
-            Task<int> taskListen = sut.ListenToOrderBook(stream, cancellationTokenSource.Token);
+            Task<int> taskListen = sut.ListenToOrderBookDepthStream(stream, cancellationTokenSource.Token);
             Task taskCountingMessage = Task.Run(async () =>
             {
                 while (sut.OrderBookMessages.Count < 20)
@@ -118,6 +118,29 @@ namespace TradingBot.Tests.Integration
             //ASSERT
             Assert.True(sut.OrderBookMessages.Count >= 2);
         }
+
+        [Fact]
+        public async Task CanLoadInitialOrderBookSnapshot()
+        {
+            //ARRANGE
+            var sut = new BinanceConnectorWrapper(_logger);
+            var cancellationTokenSource = new CancellationTokenSource();
+            var symbol = "BTCUSDT";
+            var tasks = new List<Task>();
+
+            //ACT
+            Task<OrderBookAPISnapshot?> result = sut.LoadInitialOrderBookSnapshot(symbol);
+            try
+            {
+                await result;
+            }
+            catch { }
+
+            //ASSERT
+            Assert.True(result.IsCompletedSuccessfully);
+        }
+
+
 
 
     }

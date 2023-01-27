@@ -1,7 +1,8 @@
 ﻿using Binance.Spot;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
-using TradingBot.BinanceServices.PayloadModels;
+using TradingBot.BinanceServices.PayloadModels.API;
+using TradingBot.BinanceServices.PayloadModels.Websockets;
 
 namespace TradingBot.BinanceServices
 {
@@ -21,7 +22,17 @@ namespace TradingBot.BinanceServices
         public ConcurrentQueue<string> Messages { get => messages; }
         public ConcurrentQueue<string> OrderBookMessages { get => orderBookMessages; }
 
-        public async Task<int> ListenToOrderBook(string stream, CancellationToken token)
+        public async Task<OrderBookAPISnapshot?> LoadInitialOrderBookSnapshot(string symbol) {
+            Market market = new Market();
+            var receivedMessage = await market.OrderBook(symbol,1000);
+
+            var trimmedEntry = receivedMessage.Remove(receivedMessage.LastIndexOf("}") + 1);
+            OrderBookAPISnapshot? orderBookEntry = JsonConvert.DeserializeObject<OrderBookAPISnapshot>(trimmedEntry);
+            return orderBookEntry;    
+        }
+
+
+        public async Task<int> ListenToOrderBookDepthStream(string stream, CancellationToken token)
         {
             _logger.LogInformation("ListenToOrderBook started");
             string receivedMessage = string.Empty;

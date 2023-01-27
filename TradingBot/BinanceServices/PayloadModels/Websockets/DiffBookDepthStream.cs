@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Numerics;
 
-namespace TradingBot.BinanceServices.PayloadModels
+namespace TradingBot.BinanceServices.PayloadModels.Websockets
 {
+    //the object returned by https://binance-docs.github.io/apidocs/futures/en/#diff-book-depth-streams
     public class DiffBookDepthStream
     {
         [JsonProperty("e")]

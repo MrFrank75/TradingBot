@@ -1,4 +1,4 @@
-﻿namespace TradingBot.BinanceServices.PayloadModels
+﻿namespace TradingBot.BinanceServices.PayloadModels.Websockets
 {
     public class BidAskEntry
     {
