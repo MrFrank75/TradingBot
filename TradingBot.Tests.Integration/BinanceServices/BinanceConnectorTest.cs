@@ -4,7 +4,7 @@ using TradingBot.BinanceServices.PayloadModels.API;
 using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
 
-namespace TradingBot.Tests.Integration
+namespace TradingBot.Tests.Integration.BinanceServices
 {
 
     public class BinanceConnectorTest

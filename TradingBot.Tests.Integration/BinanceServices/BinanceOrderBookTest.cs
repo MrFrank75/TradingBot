@@ -4,9 +4,9 @@ using TradingBot.Tests.Integration.Dummies;
 using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
 
-namespace TradingBot.Tests.Integration
+namespace TradingBot.Tests.Integration.BinanceServices
 {
-    public  class BinanceOrderBookTest
+    public class BinanceOrderBookTest
     {
         private readonly ILogger<BinanceOrderBook> _logger;
         private readonly ILogger<BinanceConnectorWrapper> _loggerConnector;
@@ -18,7 +18,8 @@ namespace TradingBot.Tests.Integration
         }
 
         [Fact]
-        public async void CanCancel_PopulateOrderBook_Request() {
+        public async void CanCancel_PopulateOrderBook_Request()
+        {
 
             //ARRANGE
             var cancellationTokenSource = new CancellationTokenSource();
@@ -29,8 +30,9 @@ namespace TradingBot.Tests.Integration
             var sut = new BinanceOrderBook(_logger, binanceConnectorWrapper, orderBookConverter);
 
             //ACT
-            Task populateOrderBook = sut.Populate(symbol,cancellationTokenSource.Token);
-            Task taskCancelToken = Task.Run(() => {
+            Task populateOrderBook = sut.Populate(symbol, cancellationTokenSource.Token);
+            Task taskCancelToken = Task.Run(() =>
+            {
                 cancellationTokenSource.Cancel();
                 return Task.CompletedTask;
             });
