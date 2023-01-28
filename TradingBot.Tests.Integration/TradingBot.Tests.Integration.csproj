@@ -27,6 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestData\OrderBookDiffBookDepthStreamMessages.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\OrderBookInitialSnapshotTestData1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

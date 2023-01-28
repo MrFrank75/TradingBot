@@ -6,7 +6,7 @@ namespace TradingBot.BinanceServices
 {
     public class OrderBookConverter : IOrderBookConverter
     {
-        public void PopulateFromBidAskEntries(ConcurrentQueue<string> orderBookMessages, List<OrderBookEntry> entries)
+        public void PopulateFromBidAskEntries(ConcurrentQueue<DiffBookDepthStream> orderBookMessages, List<OrderBookEntry> entries)
         {
            throw new NotImplementedException();
         }

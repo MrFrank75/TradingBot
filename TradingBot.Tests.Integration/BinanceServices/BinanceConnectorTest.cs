@@ -98,7 +98,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
             Task<int> taskListen = sut.ListenToOrderBookDepthStream(stream, cancellationTokenSource.Token);
             Task taskCountingMessage = Task.Run(async () =>
             {
-                while (sut.OrderBookMessages.Count < 20)
+                while (sut.OrderBookDiffMessages.Count < 20)
                 {
                     await Task.Delay(1000);
                 }
@@ -116,7 +116,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
             catch { }
 
             //ASSERT
-            Assert.True(sut.OrderBookMessages.Count >= 2);
+            Assert.True(sut.OrderBookDiffMessages.Count >= 2);
         }
 
         [Fact]

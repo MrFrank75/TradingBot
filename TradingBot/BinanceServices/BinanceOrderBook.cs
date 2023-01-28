@@ -39,7 +39,7 @@ namespace TradingBot.BinanceServices
                 while (cancellationToken.IsCancellationRequested == false)
                 {
                     Task.Delay(10).Wait();  //give some rest to the CPU
-                    _orderBookConverter.PopulateFromBidAskEntries(_binanceConnectorWrapper.OrderBookMessages, Entries);
+                    _orderBookConverter.PopulateFromBidAskEntries(_binanceConnectorWrapper.OrderBookDiffMessages, Entries);
                 }
 
             }

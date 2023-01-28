@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
 using TradingBot.BinanceServices;
 using TradingBot.BinanceServices.PayloadModels.API;
+using TradingBot.BinanceServices.PayloadModels.Websockets;
 
 namespace TradingBot.Tests.Integration.Dummies
 {
     internal class DummyOrderBookConverter : IOrderBookConverter
     {
-        public void PopulateFromBidAskEntries(ConcurrentQueue<string> orderBookMessages, List<OrderBookEntry> entries)
+        public void PopulateFromBidAskEntries(ConcurrentQueue<DiffBookDepthStream> orderBookMessages, List<OrderBookEntry> entries)
         {
             //do nothing
         }

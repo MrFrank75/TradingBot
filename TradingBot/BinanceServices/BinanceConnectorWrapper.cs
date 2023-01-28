@@ -11,7 +11,7 @@ namespace TradingBot.BinanceServices
         private readonly string BaseUrl;
         private readonly ILogger<IBinanceConnectorWrapper> _logger;
         private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
-        private ConcurrentQueue<string> orderBookMessages = new ConcurrentQueue<string>();
+        private ConcurrentQueue<DiffBookDepthStream> orderBookDiffMessages = new ConcurrentQueue<DiffBookDepthStream>();
 
         public BinanceConnectorWrapper(ILogger<BinanceConnectorWrapper> logger, string baseUrl = "wss://stream.binancefuture.com")
         {
@@ -20,7 +20,7 @@ namespace TradingBot.BinanceServices
         }
 
         public ConcurrentQueue<string> Messages { get => messages; }
-        public ConcurrentQueue<string> OrderBookMessages { get => orderBookMessages; }
+        public ConcurrentQueue<DiffBookDepthStream> OrderBookDiffMessages { get => orderBookDiffMessages; }
 
         public async Task<OrderBookAPISnapshot?> LoadInitialOrderBookSnapshot(string symbol) {
             Market market = new Market();
@@ -104,9 +104,12 @@ namespace TradingBot.BinanceServices
         {
             try
             {
-                orderBookMessages.Enqueue(receivedMessage);
                 var trimmedEntry = receivedMessage.Remove(receivedMessage.LastIndexOf("}")+1);
                 DiffBookDepthStream? orderBookEntry = JsonConvert.DeserializeObject<DiffBookDepthStream>(trimmedEntry);
+                if (orderBookEntry != null)
+                {
+                    orderBookDiffMessages.Enqueue(orderBookEntry);
+                }
 
                 _logger.LogInformation(receivedMessage + "\r\n");
                 _logger.LogInformation(orderBookEntry + "\r\n");
