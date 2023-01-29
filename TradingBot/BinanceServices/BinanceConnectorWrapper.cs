@@ -34,7 +34,6 @@ namespace TradingBot.BinanceServices
 
         public async Task<int> ListenToOrderBookDepthStream(string stream, CancellationToken token)
         {
-            _logger.LogInformation("ListenToOrderBook started");
             string receivedMessage = string.Empty;
             MarketDataWebSocket dws = new MarketDataWebSocket(stream, BaseUrl);
 
@@ -108,11 +107,16 @@ namespace TradingBot.BinanceServices
                 DiffBookDepthStream? orderBookEntry = JsonConvert.DeserializeObject<DiffBookDepthStream>(trimmedEntry);
                 if (orderBookEntry != null)
                 {
+                    if (orderBookEntry.AsksToUpdate == null)
+                    { orderBookEntry.AsksToUpdate = new List<BidAskEntry>(); }
+
+                    if (orderBookEntry.BidsToUpdate == null)
+                    { orderBookEntry.BidsToUpdate = new List<BidAskEntry>(); }
+
                     orderBookDiffMessages.Enqueue(orderBookEntry);
                 }
 
-                _logger.LogInformation(receivedMessage + "\r\n");
-                _logger.LogInformation(orderBookEntry + "\r\n");
+                _logger.LogTrace($"Raw orderBookMessage:{receivedMessage}");
             }
             catch (Exception ex)
             {

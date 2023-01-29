@@ -21,7 +21,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         [Fact]
         public async Task CanBuildOrderBookFromEntriesStreamWithGranularity100()
         {
-            var sut = new OrderBookBuilder();
+            var sut = new OrderBookBuilder(_logger);
             var orderBook = new List<OrderBookEntry>();
             OrderBookAPISnapshot testDataSnapshot = GetTestDataInitialSnapshotForStreamTest();
             ConcurrentQueue<DiffBookDepthStream> testDataOrderBookEntries = GetTestDataFromFakeStream();
@@ -37,10 +37,9 @@ namespace TradingBot.Tests.Integration.BinanceServices
 
         }
 
-
         [Fact]
         public async Task CanBuildInitialSnapshotWithGranularity100() { 
-            var sut = new OrderBookBuilder();
+            var sut = new OrderBookBuilder(_logger);
             var orderBook = new List<OrderBookEntry>();
             OrderBookAPISnapshot testDataSnapshot = GetTestDataForInitialSnapshotTest();
 
@@ -56,7 +55,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         public async Task CanBuildInitialSnapshotWithGranularity50()
         {
             //ARRANGE
-            var sut = new OrderBookBuilder();
+            var sut = new OrderBookBuilder(_logger);
             var orderBook = new List<OrderBookEntry>();
             OrderBookAPISnapshot testDataSnapshot = GetTestDataForInitialSnapshotTest();
 
@@ -73,7 +72,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         public async Task CanConvertInitialSnapshotWithGranularity1()
         {
             //ARRANGE
-            var sut = new OrderBookBuilder();
+            var sut = new OrderBookBuilder(_logger);
             var orderBook = new List<OrderBookEntry>();
             OrderBookAPISnapshot testDataSnapshot = GetTestDataForInitialSnapshotTest();
 
