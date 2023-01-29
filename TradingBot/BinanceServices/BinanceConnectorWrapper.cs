@@ -13,7 +13,7 @@ namespace TradingBot.BinanceServices
         private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
         private ConcurrentQueue<DiffBookDepthStream> orderBookDiffMessages = new ConcurrentQueue<DiffBookDepthStream>();
 
-        public BinanceConnectorWrapper(ILogger<BinanceConnectorWrapper> logger, string baseUrl = "wss://stream.binancefuture.com")
+        public BinanceConnectorWrapper(ILogger<BinanceConnectorWrapper> logger, string baseUrl = "wss://fstream.binance.com")
         {
             this.BaseUrl = baseUrl;
             this._logger = logger;
@@ -23,7 +23,7 @@ namespace TradingBot.BinanceServices
         public ConcurrentQueue<DiffBookDepthStream> OrderBookDiffMessages { get => orderBookDiffMessages; }
 
         public async Task<OrderBookAPISnapshot?> LoadInitialOrderBookSnapshot(string symbol) {
-            Market market = new Market();
+            FutureMarket market = new FutureMarket();
             var receivedMessage = await market.OrderBook(symbol,1000);
 
             var trimmedEntry = receivedMessage.Remove(receivedMessage.LastIndexOf("}") + 1);
@@ -54,7 +54,7 @@ namespace TradingBot.BinanceServices
             while (token.IsCancellationRequested == false)
             {
                 //just keep waiting
-                Task.Delay(1000).Wait();
+                await Task.Delay(1000);
             }
 
             await dws.DisconnectAsync(token);
@@ -116,7 +116,7 @@ namespace TradingBot.BinanceServices
                     orderBookDiffMessages.Enqueue(orderBookEntry);
                 }
 
-                _logger.LogTrace($"Raw orderBookMessage:{receivedMessage}");
+                //_logger.LogTrace($"Raw orderBookMessage:{receivedMessage}");
             }
             catch (Exception ex)
             {

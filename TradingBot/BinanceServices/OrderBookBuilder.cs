@@ -4,7 +4,7 @@ using TradingBot.BinanceServices.PayloadModels.Websockets;
 
 namespace TradingBot.BinanceServices
 {
-    public class OrderBookBuilder : IOrderBookConverter
+    public class OrderBookBuilder : IOrderBookBuilder
     {
         private readonly ILogger<OrderBookBuilder> _logger;
 

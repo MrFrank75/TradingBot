@@ -5,7 +5,7 @@ using TradingBot.BinanceServices.PayloadModels.Websockets;
 
 namespace TradingBot.Tests.Integration.Dummies
 {
-    internal class DummyOrderBookConverter : IOrderBookConverter
+    internal class DummyOrderBookConverter : IOrderBookBuilder
     {
         public void BuildFromBidAskEntriesStream(ConcurrentQueue<DiffBookDepthStream> orderBookMessages, List<OrderBookEntry> entries, long lastUpdateId, int priceGranularity)
         {

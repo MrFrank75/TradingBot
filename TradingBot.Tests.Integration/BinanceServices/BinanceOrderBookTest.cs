@@ -58,7 +58,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
 
             //ARRANGE
             var cancellationTokenSource = new CancellationTokenSource();
-            var binanceConnectorWrapper = new BinanceConnectorWrapper(_loggerConnector);
+            var binanceConnectorWrapper = new BinanceConnectorWrapper(_loggerConnector, "wss://fstream.binance.com");
             var symbol = "BTCUSDT";
             var tasks = new List<Task>();
             var sut = new BinanceOrderBook(_logger, binanceConnectorWrapper, new OrderBookBuilder(_orderBookBuilderLogger));
@@ -67,7 +67,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
             Task populateOrderBook = sut.Build(symbol, cancellationTokenSource.Token);
             Task taskCancelToken = Task.Run(async () =>
             {
-                await Task.Delay(10000);
+                await Task.Delay(30000);
                 cancellationTokenSource.Cancel();
                 return Task.CompletedTask;
             });
