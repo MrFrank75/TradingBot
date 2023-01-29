@@ -19,7 +19,7 @@ namespace TradingBot.BinanceServices.PayloadModels.Websockets
         [JsonProperty("u")]
         public long LastUpdateId { get; set; }  //the last update ID in this order book entry
         [JsonProperty("pu")]
-        public long PreviousUpdateId { get; set; }  //the last updated ID that has been sent so far
+        public long PreviousLastUpdateId { get; set; }  //the last updated ID that has been sent so far
         [JsonProperty("b")]
         [JsonConverter(typeof(BidAskEntryConverter))]
         public List<BidAskEntry> BidsToUpdate { get; set; }

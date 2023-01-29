@@ -30,7 +30,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
             var sut = new BinanceOrderBook(_logger, binanceConnectorWrapper, orderBookConverter);
 
             //ACT
-            Task populateOrderBook = sut.Populate(symbol, cancellationTokenSource.Token);
+            Task populateOrderBook = sut.Build(symbol, cancellationTokenSource.Token);
             Task taskCancelToken = Task.Run(() =>
             {
                 cancellationTokenSource.Cancel();

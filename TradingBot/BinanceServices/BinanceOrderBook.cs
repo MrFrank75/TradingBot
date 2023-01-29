@@ -6,6 +6,7 @@ namespace TradingBot.BinanceServices
 {
     public class BinanceOrderBook
     {
+        private const int PriceGranularity = 100;
         private readonly ILogger<BinanceOrderBook> _logger;
         private readonly IBinanceConnectorWrapper _binanceConnectorWrapper;
         private readonly IOrderBookConverter _orderBookConverter;
@@ -19,7 +20,7 @@ namespace TradingBot.BinanceServices
             _orderBookConverter = orderBookConverter;
         }
 
-        public async Task Populate(string symbol, CancellationToken cancellationToken) {
+        public async Task Build(string symbol, CancellationToken cancellationToken) {
             try
             {
                 //start listening to the stream
@@ -33,13 +34,13 @@ namespace TradingBot.BinanceServices
                     throw new Exception("the returned initial Order book snapshot was null. This was unexpected.");
                 }
 
-                _orderBookConverter.PopulateFromSnapshot(initialSnapshot, Entries, 100);
+                _orderBookConverter.BuildFromSnapshot(initialSnapshot, Entries, PriceGranularity);
 
                 //keep adding up order book entries as they come, until cancellation is requested
                 while (cancellationToken.IsCancellationRequested == false)
                 {
                     Task.Delay(10).Wait();  //give some rest to the CPU
-                    _orderBookConverter.PopulateFromBidAskEntries(_binanceConnectorWrapper.OrderBookDiffMessages, Entries);
+                    _orderBookConverter.BuildFromBidAskEntriesStream(_binanceConnectorWrapper.OrderBookDiffMessages, Entries, initialSnapshot.LastUpdateId, PriceGranularity);
                 }
 
             }

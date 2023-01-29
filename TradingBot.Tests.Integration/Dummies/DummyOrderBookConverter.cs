@@ -7,12 +7,12 @@ namespace TradingBot.Tests.Integration.Dummies
 {
     internal class DummyOrderBookConverter : IOrderBookConverter
     {
-        public void PopulateFromBidAskEntries(ConcurrentQueue<DiffBookDepthStream> orderBookMessages, List<OrderBookEntry> entries)
+        public void BuildFromBidAskEntriesStream(ConcurrentQueue<DiffBookDepthStream> orderBookMessages, List<OrderBookEntry> entries, long lastUpdateId, int priceGranularity)
         {
             //do nothing
         }
 
-        public void PopulateFromSnapshot(OrderBookAPISnapshot initialSnapshot, List<OrderBookEntry> entries, int priceGranularity)
+        public void BuildFromSnapshot(OrderBookAPISnapshot initialSnapshot, List<OrderBookEntry> entries, int priceGranularity)
         {
             //do nothing
         }
