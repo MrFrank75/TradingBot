@@ -67,7 +67,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
             Task populateOrderBook = sut.Build(symbol, cancellationTokenSource.Token);
             Task taskCancelToken = Task.Run(async () =>
             {
-                await Task.Delay(30000);
+                await Task.Delay(120000);
                 cancellationTokenSource.Cancel();
                 return Task.CompletedTask;
             });

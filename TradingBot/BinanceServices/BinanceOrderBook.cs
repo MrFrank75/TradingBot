@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text;
 
 namespace TradingBot.BinanceServices
 {
@@ -39,7 +40,7 @@ namespace TradingBot.BinanceServices
                 _orderBookBuilder.BuildFromSnapshot(initialSnapshot, Entries, PriceGranularity);
 
                 //start the periodic generation of the CSV
-                Task taskGenerateOrderBookSnapshot = GenerateOrderBookSnapshot(cancellationToken, 5);
+                Task taskGenerateOrderBookSnapshot = ContinuoslyGenerateOrderBookSnapshot(cancellationToken, 5);
 
                 //keep adding up order book entries as they come, until cancellation is requested
                 while (cancellationToken.IsCancellationRequested == false)
@@ -59,8 +60,10 @@ namespace TradingBot.BinanceServices
             _logger.LogInformation("Populate has been correctly terminated");
         }
 
-        private async Task GenerateOrderBookSnapshot(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations)
+        private async Task ContinuoslyGenerateOrderBookSnapshot(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations)
         {
+            string csvDirectory = $"{Environment.CurrentDirectory}\\{DateTime.Now.ToString("yyyyMMdd-hhmmss")}";
+            Directory.CreateDirectory(csvDirectory);
 
             while (cancellationToken.IsCancellationRequested == false)
             {
@@ -68,10 +71,16 @@ namespace TradingBot.BinanceServices
                 {
                     string generationId = Guid.NewGuid().ToString();
                     List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, generationId)).ToList();
-                    var jsonSnapshot = JsonConvert.SerializeObject(orderBookCSVSnapshotEntries);
-                    _logger.LogInformation($"CSV Snapshot:{jsonSnapshot}");
-                    await Task.Delay(intervalSecondsBetweenGenerations * 1000);
 
+                    List<string> csv = new List<string>();
+                    foreach (var item in orderBookCSVSnapshotEntries)
+                    {
+                        csv.Add($"{item.GenerationId};{item.PriceLevel};{item.Quantity.ToString("0.00")}");
+                    }
+                    File.AppendAllLines($"{csvDirectory}\\snapshot.csv", csv);
+
+                    _logger.LogInformation($"CSV Snapshot generated. Contains {orderBookCSVSnapshotEntries.Count} entries");
+                    await Task.Delay(intervalSecondsBetweenGenerations * 1000);
                 }
                 catch (Exception ex)
                 {
