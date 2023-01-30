@@ -13,6 +13,7 @@ namespace TradingBot.BinanceServices
         private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
         private ConcurrentQueue<DiffBookDepthStream> orderBookDiffMessages = new ConcurrentQueue<DiffBookDepthStream>();
 
+        //this constructor uses as default address the production address specified in the documentation here https://binance-docs.github.io/apidocs/futures/en/#diff-book-depth-streams
         public BinanceConnectorWrapper(ILogger<BinanceConnectorWrapper> logger, string baseUrl = "wss://fstream.binance.com")
         {
             this.BaseUrl = baseUrl;

@@ -5,6 +5,7 @@ namespace TradingBot.BinanceServices
 {
     public class FutureMarket : BinanceService
     {
+        //This constructor uses the "production" web api address as explained here: https://binance-docs.github.io/apidocs/futures/en/#diff-book-depth-streams
         public FutureMarket(string baseUrl = "https://fapi.binance.com", string apiKey = null, string apiSecret = null)
 :       base(new HttpClient(), baseUrl: baseUrl, apiKey: apiKey, apiSecret: apiSecret)
         {
