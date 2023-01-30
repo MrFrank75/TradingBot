@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using TradingBot.BinanceServices;
 using TradingBot.BinanceServices.PayloadModels.API;
 using TradingBot.BinanceServices.PayloadModels.Websockets;
+using TradingBot.Models;
 using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
 

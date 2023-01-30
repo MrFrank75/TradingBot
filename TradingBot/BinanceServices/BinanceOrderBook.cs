@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
+using TradingBot.Models;
 
 namespace TradingBot.BinanceServices
 {
@@ -59,6 +60,9 @@ namespace TradingBot.BinanceServices
             }
             _logger.LogInformation("Populate has been correctly terminated");
         }
+
+
+
 
         private async Task ContinuoslyGenerateOrderBookSnapshot(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations)
         {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using TradingBot.BinanceServices.PayloadModels.API;
 using TradingBot.BinanceServices.PayloadModels.Websockets;
+using TradingBot.Models;
 
 namespace TradingBot.BinanceServices
 {
