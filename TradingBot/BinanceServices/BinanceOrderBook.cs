@@ -7,6 +7,7 @@ namespace TradingBot.BinanceServices
     public class BinanceOrderBook
     {
         private const int PriceGranularity = 50;
+        private const int MillisecondsDelay = 5000;
         private readonly ILogger<BinanceOrderBook> _logger;
         private readonly IBinanceConnectorWrapper _binanceConnectorWrapper;
         private readonly IOrderBookBuilder _orderBookBuilder;
@@ -26,9 +27,12 @@ namespace TradingBot.BinanceServices
         {
             try
             {
-                //start listening to the stream
+                //start listening to the stream. We should be waiting that the first elements arrive before moving forward
                 var stream = $"{symbol.ToLowerInvariant()}@depth@500ms";
                 Task<int> taskStreamListening = _binanceConnectorWrapper.ListenToOrderBookDepthStream(stream, cancellationToken);
+
+                //poor's man delay for the order book stream to start
+                await Task.Delay(5000);
 
                 //get the initial snapshot
                 _logger.LogInformation("Fetching initial snapshot");
@@ -46,10 +50,8 @@ namespace TradingBot.BinanceServices
                 //keep adding up order book entries as they come, until cancellation is requested
                 while (cancellationToken.IsCancellationRequested == false)
                 {
-                    await Task.Delay(5000);  //give some rest to the CPU
-
-                    //TODO: this zero needs to be changed, we are taking the initial snapshot from the wrong API point
-                    _orderBookBuilder.BuildFromBidAskEntriesStream(_binanceConnectorWrapper.OrderBookDiffMessages, Entries, 0, PriceGranularity);
+                    await Task.Delay(MillisecondsDelay);  //give some rest to the CPU
+                    _orderBookBuilder.BuildFromBidAskEntriesStream(_binanceConnectorWrapper.OrderBookDiffMessages, Entries, initialSnapshot.LastUpdateId, PriceGranularity);
                 }
 
             }
@@ -79,7 +81,7 @@ namespace TradingBot.BinanceServices
                     List<string> csv = new List<string>();
                     foreach (var item in orderBookCSVSnapshotEntries)
                     {
-                        csv.Add($"{item.GenerationId};{item.PriceLevel};{item.Quantity.ToString("0.00")}");
+                        csv.Add($"{item.GenerationUtcDateTime};{item.PriceLevel};{item.Quantity.ToString("0.00")}");
                     }
                     File.AppendAllLines($"{csvDirectory}\\snapshot.csv", csv);
 
@@ -98,7 +100,7 @@ namespace TradingBot.BinanceServices
         {
             return new OrderBookCSVSnapshotEntry
             {
-                GenerationId = generationId,
+                GenerationUtcDateTime = generationId,
                 PriceLevel = item.PriceLevel,
                 Quantity = item.Quantity
             };

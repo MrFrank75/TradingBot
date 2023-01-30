@@ -14,7 +14,7 @@ namespace TradingBot.GoogleServices
             foreach (var csvRow in csvEntry)
             {
                 var row1 = new GoogleSheetRow();
-                var cell1 = new GoogleSheetCell() { CellValue = csvRow.GenerationId };
+                var cell1 = new GoogleSheetCell() { CellValue = csvRow.GenerationUtcDateTime };
                 var cell2 = new GoogleSheetCell() { CellValue = csvRow.PriceLevel.ToString("0.00") };
                 var cell3 = new GoogleSheetCell() { CellValue = csvRow.Quantity.ToString("0.00") };
                 row1.Cells.AddRange(new List<GoogleSheetCell>() { cell1,cell2,cell3});

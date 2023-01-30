@@ -34,7 +34,7 @@ namespace TradingBot.Tests.Integration.GoogleServices
             await sut.WriteCsvRowsIntoSheet("1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE", new List<OrderBookCSVSnapshotEntry>() { 
                 new OrderBookCSVSnapshotEntry
                 {
-                    GenerationId = "1",
+                    GenerationUtcDateTime = "1",
                     PriceLevel = 2,
                     Quantity = 3
                 }

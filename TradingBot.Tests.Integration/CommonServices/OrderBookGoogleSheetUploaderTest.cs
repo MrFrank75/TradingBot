@@ -22,7 +22,7 @@ namespace TradingBot.Tests.Integration.CommonServices
             _loggerBinanceConnector = XUnitLogger.CreateLogger<BinanceConnectorWrapper>(testOutputHelper);
         }
 
-        [Fact]
+        [Fact(Skip ="Long test to be used when generating an actual Order Book for study purposes")]
         public async void CanUploadOrderBookData_FromRealOrderBookRequest()
         {
             string PRODUCTION_ADDRESS_FOR_FUTURES_WEBSOCKET_STREAM = "wss://fstream.binance.com"; //as explained in https://binance-docs.github.io/apidocs/futures/en/#diff-book-depth-streams

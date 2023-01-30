@@ -52,7 +52,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
             Assert.True(populateOrderBook.IsCompletedSuccessfully == true);
         }
 
-        [Fact]
+        [Fact(Skip ="Manual test to be used for the generation of multiple CSV snapshots")]
         public async void CanGenerateOneCsv_FromRealOrderBookRequest()
         {
 

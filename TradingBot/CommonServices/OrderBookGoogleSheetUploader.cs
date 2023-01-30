@@ -6,6 +6,7 @@ namespace TradingBot.CommonServices
 {
     public class OrderBookGoogleSheetUploader
     {
+        private const int MS_IN_A_SECOND = 1000;
         private readonly ILogger<OrderBookGoogleSheetUploader> _logger;
         private readonly string _googleSheetId;
         private readonly GoogleSheetWriter _gsw;
@@ -25,12 +26,12 @@ namespace TradingBot.CommonServices
             {
                 try
                 {
-                    string generationId = Guid.NewGuid().ToString();
-                    List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, generationId)).ToList();
+                    string generationUtcDateTime = DateTime.UtcNow.ToString("yyyyMMddHHmmssff");
+                    List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, generationUtcDateTime)).ToList();
                     await _gsw.WriteCsvRowsIntoSheet(_googleSheetId, orderBookCSVSnapshotEntries, startingRow);
                     startingRow += orderBookCSVSnapshotEntries.Count;
 
-                    await Task.Delay(intervalSecondsBetweenGenerations * 1000);
+                    await Task.Delay(intervalSecondsBetweenGenerations * MS_IN_A_SECOND);
                 }
                 catch (Exception ex)
                 {
@@ -40,11 +41,11 @@ namespace TradingBot.CommonServices
             }
         }
 
-        private OrderBookCSVSnapshotEntry CreateOrderBookCSVSnapshotEntry(OrderBookEntry item, string generationId)
+        private OrderBookCSVSnapshotEntry CreateOrderBookCSVSnapshotEntry(OrderBookEntry item, string generationUtcDateTime)
         {
             return new OrderBookCSVSnapshotEntry
             {
-                GenerationId = generationId,
+                GenerationUtcDateTime = generationUtcDateTime,
                 PriceLevel = item.PriceLevel,
                 Quantity = item.Quantity
             };
