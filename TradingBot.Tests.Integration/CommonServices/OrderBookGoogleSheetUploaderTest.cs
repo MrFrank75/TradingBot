@@ -40,7 +40,7 @@ namespace TradingBot.Tests.Integration.CommonServices
             Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheet(cancellationTokenSource.Token, 60, binanceOrderBook.Entries);
             Task taskCancelToken = Task.Run(async () =>
             {
-                int minutesAcquistionDuration = 10;
+                int minutesAcquistionDuration = 1;
                 await Task.Delay(minutesAcquistionDuration * 60000);
                 cancellationTokenSource.Cancel();
                 return Task.CompletedTask;

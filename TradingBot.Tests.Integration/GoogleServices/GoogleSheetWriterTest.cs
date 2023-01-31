@@ -24,19 +24,19 @@ namespace TradingBot.Tests.Integration.GoogleServices
         public async Task CanWriteRowInGoogleSheet()
         {
             var sut = new TradingBot.GoogleServices.GoogleSheetWriter();
-            await  sut.WriteCsvRowsIntoSheet("1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE", new List<OrderBookCSVSnapshotEntry>(),
+            await  sut.WriteCsvRowsIntoSheet("1FAT1lvMmWDje_tdaNTygz8tTwpv2EcKFqhmTjBJ62i8", new List<OrderBookCSVSnapshotEntry>(),
                 1);
         }
         [Fact]
         public async Task CanWriteCsvRowInGoogleSheet()
         {
             var sut = new TradingBot.GoogleServices.GoogleSheetWriter();
-            await sut.WriteCsvRowsIntoSheet("1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE", new List<OrderBookCSVSnapshotEntry>() { 
+            await sut.WriteCsvRowsIntoSheet("1FAT1lvMmWDje_tdaNTygz8tTwpv2EcKFqhmTjBJ62i8", new List<OrderBookCSVSnapshotEntry>() { 
                 new OrderBookCSVSnapshotEntry
                 {
                     GenerationUtcDateTime = "1",
-                    PriceLevel = 2,
-                    Quantity = 3
+                    PriceLevel = 23452.22,
+                    Quantity = 12233.213
                 }
                 },
             1);

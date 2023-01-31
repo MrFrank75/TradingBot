@@ -103,13 +103,17 @@ namespace GoogleSheetsHelper
             {
                 var rowData = new RowData();
                 var listCellData = new List<CellData>();
-                foreach (var cell in row.Cells)
+                foreach (GoogleSheetCell cell in row.Cells)
                 {
                     var cellData = new CellData();
                     var extendedValue = new ExtendedValue { StringValue = cell.CellValue };
 
                     cellData.UserEnteredValue = extendedValue;
-                    var cellFormat = new CellFormat { TextFormat = new TextFormat() };
+                    var cellFormat = new CellFormat();
+                    if (cell.NumberFormatPattern!= null)
+                        cellFormat.NumberFormat = new NumberFormat() { Type="NUMBER", Pattern = cell.NumberFormatPattern };
+                    else
+                        cellFormat.TextFormat= new TextFormat() { };
 
                     if (cell.IsBold)
                     {
