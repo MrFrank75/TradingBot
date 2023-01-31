@@ -35,30 +35,38 @@ namespace TradingBot.BinanceServices
 
         public async Task<int> ListenToOrderBookDepthStream(string stream, CancellationToken token)
         {
-            string receivedMessage = string.Empty;
-            MarketDataWebSocket dws = new MarketDataWebSocket(stream, BaseUrl);
-
-            //1) register to the message received
-            dws.OnMessageReceived(OrderBookMessageReceived, token);
-
-            //2) connect before sending ANY request
-            await dws.ConnectAsync(token);
-
-            //3) SEND a subscription request to start receiving data
-            Task result = dws.SendAsync(stream, token);
-            result.Wait();
-            if (result.IsCompletedSuccessfully == false)
+            try
             {
-                throw new Exception("Send failed");
-            }
+                string receivedMessage = string.Empty;
+                MarketDataWebSocket dws = new MarketDataWebSocket(stream, BaseUrl);
 
-            while (token.IsCancellationRequested == false)
+                //1) register to the message received
+                dws.OnMessageReceived(OrderBookMessageReceived, token);
+
+                //2) connect before sending ANY request
+                await dws.ConnectAsync(token);
+
+                //3) SEND a subscription request to start receiving data
+                Task result = dws.SendAsync(stream, token);
+                result.Wait();
+                if (result.IsCompletedSuccessfully == false)
+                {
+                    throw new Exception("Send failed");
+                }
+
+                while (token.IsCancellationRequested == false)
+                {
+                    //just keep waiting
+                    await Task.Delay(1000);
+                }
+
+                await dws.DisconnectAsync(token);
+            }
+            catch (Exception ex)
             {
-                //just keep waiting
-                await Task.Delay(1000);
+                _logger.LogError(ex.Message);
+                return 0;
             }
-
-            await dws.DisconnectAsync(token);
 
             return 1;
         }
@@ -104,6 +112,12 @@ namespace TradingBot.BinanceServices
         {
             try
             {
+                if (receivedMessage.StartsWith("{") == false)
+                {
+                    _logger.LogTrace("Received broken message from the OrderBook stream. This message will be discarded");
+                    return Task.CompletedTask;
+                } 
+
                 var trimmedEntry = receivedMessage.Remove(receivedMessage.LastIndexOf("}")+1);
                 DiffBookDepthStream? orderBookEntry = JsonConvert.DeserializeObject<DiffBookDepthStream>(trimmedEntry);
                 if (orderBookEntry != null)

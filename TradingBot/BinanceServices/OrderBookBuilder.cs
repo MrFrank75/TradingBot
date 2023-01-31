@@ -39,9 +39,6 @@ namespace TradingBot.BinanceServices
                 return;
             }
 
-            if (lastSnapshotUpdateId>0 && validItems.First().FirstUpdateId > lastSnapshotUpdateId)
-                throw new Exception("Missing Data. A new snapshot is required");
-
             foreach (var diffBookEntry in dequeuedItems)
             {
                 diffBookEntry.AsksToUpdate.ForEach(ask => 

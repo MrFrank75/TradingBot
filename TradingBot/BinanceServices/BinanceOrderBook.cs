@@ -44,9 +44,6 @@ namespace TradingBot.BinanceServices
                 _logger.LogInformation($"Initial Snapshot last update ID:{initialSnapshot.LastUpdateId}");
                 _orderBookBuilder.BuildFromSnapshot(initialSnapshot, Entries, PriceGranularity);
 
-                //start the periodic generation of the CSV
-                Task taskGenerateOrderBookSnapshot = ContinuoslyGenerateOrderBookSnapshot(cancellationToken, 5);
-
                 //keep adding up order book entries as they come, until cancellation is requested
                 while (cancellationToken.IsCancellationRequested == false)
                 {
