@@ -82,6 +82,7 @@ namespace GoogleSheetsHelper
             return returnValues;
         }
 
+
         public void AddCells(GoogleSheetParameters googleSheetParameters, List<GoogleSheetRow> rows)
         {
             var requests = new BatchUpdateSpreadsheetRequest { Requests = new List<Google.Apis.Sheets.v4.Data.Request>() };
@@ -106,14 +107,19 @@ namespace GoogleSheetsHelper
                 foreach (GoogleSheetCell cell in row.Cells)
                 {
                     var cellData = new CellData();
-                    var extendedValue = new ExtendedValue { StringValue = cell.CellValue };
-
-                    cellData.UserEnteredValue = extendedValue;
                     var cellFormat = new CellFormat();
-                    if (cell.NumberFormatPattern!= null)
-                        cellFormat.NumberFormat = new NumberFormat() { Type="NUMBER", Pattern = cell.NumberFormatPattern };
+                    if (cell.NumberValue != null)
+                    {
+                        var extendedValue = new ExtendedValue { NumberValue = cell.NumberValue };
+                        cellData.UserEnteredValue = extendedValue;
+                        cellFormat.NumberFormat = new NumberFormat() { Type = "NUMBER", Pattern = cell.NumberFormatPattern };
+                    }
                     else
-                        cellFormat.TextFormat= new TextFormat() { };
+                    {
+                        var extendedValue = new ExtendedValue { StringValue = cell.CellValue };
+                        cellData.UserEnteredValue = extendedValue;
+                        cellFormat.TextFormat = new TextFormat() { };
+                    }
 
                     if (cell.IsBold)
                     {

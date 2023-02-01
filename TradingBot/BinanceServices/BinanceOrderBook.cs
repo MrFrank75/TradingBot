@@ -63,7 +63,7 @@ namespace TradingBot.BinanceServices
 
 
 
-        private async Task ContinuoslyGenerateOrderBookSnapshot(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations)
+        private async Task ContinuoslyGenerateOrderBookCSVSnapshot(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations)
         {
             string csvDirectory = $"{Environment.CurrentDirectory}\\{DateTime.Now.ToString("yyyyMMdd-hhmmss")}";
             Directory.CreateDirectory(csvDirectory);

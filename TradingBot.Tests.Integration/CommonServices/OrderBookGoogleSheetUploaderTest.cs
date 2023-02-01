@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using TradingBot.BinanceServices;
 using TradingBot.CommonServices;
+using TradingBot.GoogleServices;
 using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
 using static System.Net.WebRequestMethods;
@@ -33,14 +34,17 @@ namespace TradingBot.Tests.Integration.CommonServices
             var symbol = "BTCUSDT";
             var tasks = new List<Task>();
             var binanceOrderBook = new BinanceOrderBook(_loggerOrderBook, binanceConnectorWrapper, new OrderBookBuilder(_loggerOrderBookBuilder));
-            var sut = new OrderBookGoogleSheetUploader(_loggerGoogleSheetUploader, "1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE");
+            IPriceRangeQuantizer priceRangeQuantizer = new PriceRangeQuantizer();
+            IGoogleSheetWriter googleSheetWriter = new GoogleSheetWriter(priceRangeQuantizer);
+            
+            var sut = new OrderBookGoogleSheetUploader(_loggerGoogleSheetUploader, "1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE", priceRangeQuantizer, googleSheetWriter);
 
             //ACT
             Task populateOrderBook = binanceOrderBook.Build(symbol, cancellationTokenSource.Token);
-            Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheet(cancellationTokenSource.Token, 60, binanceOrderBook.Entries);
+            Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationTokenSource.Token, 60, binanceOrderBook.Entries, 15000,30000,100);
             Task taskCancelToken = Task.Run(async () =>
             {
-                int minutesAcquistionDuration = 1;
+                int minutesAcquistionDuration = 15;
                 await Task.Delay(minutesAcquistionDuration * 60000);
                 cancellationTokenSource.Cancel();
                 return Task.CompletedTask;
