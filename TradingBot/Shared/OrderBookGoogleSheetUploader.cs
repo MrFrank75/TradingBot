@@ -2,7 +2,7 @@
 using TradingBot.GoogleServices;
 using TradingBot.Models;
 
-namespace TradingBot.CommonServices
+namespace TradingBot.Shared
 {
     public class OrderBookGoogleSheetUploader
     {

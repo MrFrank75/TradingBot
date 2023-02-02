@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingBot.BinanceServices;
-using TradingBot.CommonServices;
+using TradingBot.Shared;
 using TradingBot.Models;
 using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
@@ -22,7 +22,7 @@ namespace TradingBot.Tests.Integration.GoogleServices
         }
 
         [Fact]
-        public async Task CanWriteRowInGoogleSheet()
+        public void CanWriteRowInGoogleSheet()
         {
             IPriceRangeQuantizer prq = new PriceRangeQuantizer();
             var sut = new TradingBot.GoogleServices.GoogleSheetWriter(prq);

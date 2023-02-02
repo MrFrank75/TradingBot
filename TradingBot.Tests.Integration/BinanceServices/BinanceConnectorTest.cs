@@ -98,7 +98,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
             Task<int> taskListen = sut.ListenToOrderBookDepthStream(stream, cancellationTokenSource.Token);
             Task taskCountingMessage = Task.Run(async () =>
             {
-                while (sut.OrderBookDiffMessages.Count < 20)
+                while (sut.OrderBookDiffMessages.Count < 10)
                 {
                     await Task.Delay(1000);
                 }

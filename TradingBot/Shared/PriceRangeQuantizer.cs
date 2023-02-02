@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.Xml;
 
-namespace TradingBot.CommonServices
+namespace TradingBot.Shared
 {
     public class PriceRangeQuantizer : IPriceRangeQuantizer
     {

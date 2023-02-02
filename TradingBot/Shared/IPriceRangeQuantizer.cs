@@ -1,4 +1,4 @@
-﻿namespace TradingBot.CommonServices
+﻿namespace TradingBot.Shared
 {
     public interface IPriceRangeQuantizer
     {

@@ -3,7 +3,7 @@ using GoogleSheetsHelper;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Diagnostics;
 using System.Drawing;
-using TradingBot.CommonServices;
+using TradingBot.Shared;
 using TradingBot.Models;
 
 namespace TradingBot.GoogleServices
