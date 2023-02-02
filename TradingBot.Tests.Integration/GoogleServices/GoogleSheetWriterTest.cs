@@ -101,6 +101,7 @@ namespace TradingBot.Tests.Integration.GoogleServices
                 20000,
                 24000,
                 1000,
+                21545,
                 1);
         }
 

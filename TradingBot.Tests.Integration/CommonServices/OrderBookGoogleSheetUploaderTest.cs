@@ -41,10 +41,10 @@ namespace TradingBot.Tests.Integration.CommonServices
 
             //ACT
             Task populateOrderBook = binanceOrderBook.Build(symbol, cancellationTokenSource.Token);
-            Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationTokenSource.Token, 60, binanceOrderBook.Entries, 15000,30000,100);
+            Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationTokenSource.Token, 300, binanceOrderBook.Entries, 21000,24000,23000,100);
             Task taskCancelToken = Task.Run(async () =>
             {
-                int minutesAcquistionDuration = 15;
+                int minutesAcquistionDuration = 240;
                 await Task.Delay(minutesAcquistionDuration * 60000);
                 cancellationTokenSource.Cancel();
                 return Task.CompletedTask;

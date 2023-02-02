@@ -21,7 +21,7 @@ namespace TradingBot.CommonServices
 
         }
 
-        public async Task ContinuoslyUpdateOrderBookInGoogleSheetByColumn(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations, List<OrderBookEntry> Entries, double lowPriceRange, double highPriceRange, double priceGranularity)
+        public async Task ContinuoslyUpdateOrderBookInGoogleSheetByColumn(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations, List<OrderBookEntry> Entries,double lowPriceRange, double highPriceRange, double priceGranularity)
         {
             int startingColumn = 2;
             bool headerCreated = false;
@@ -51,7 +51,7 @@ namespace TradingBot.CommonServices
             }
         }
 
-        public async Task ContinuoslyUpdateOrderBookInGoogleSheetByRow(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations, List<OrderBookEntry> Entries, double lowPriceRange, double highPriceRange, double priceGranularity)
+        public async Task ContinuoslyUpdateOrderBookInGoogleSheetByRow(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations, List<OrderBookEntry> Entries, double lowPriceRange, double highPriceRange, double priceGranularity, double currentAssetPrice)
         {
             int startingRow = 2;
             var maxLevel = _priceRangeQuantizer.GetMaxLevel(lowPriceRange, highPriceRange, priceGranularity);
@@ -63,7 +63,7 @@ namespace TradingBot.CommonServices
                     string generationUtcDateTime = DateTime.UtcNow.ToString("HHmmssff");
                     List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, generationUtcDateTime)).ToList();
                     if (orderBookCSVSnapshotEntries.Any()) {
-                        _gsw.WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(_googleSheetId, orderBookCSVSnapshotEntries, lowPriceRange, highPriceRange, priceGranularity, startingRow);
+                        _gsw.WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(_googleSheetId, orderBookCSVSnapshotEntries, lowPriceRange, highPriceRange, priceGranularity, currentAssetPrice, startingRow);
                         startingRow += (maxLevel + 1);
                     }
 

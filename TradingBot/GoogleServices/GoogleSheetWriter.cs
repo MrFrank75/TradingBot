@@ -80,7 +80,7 @@ namespace TradingBot.GoogleServices
         }
 
 
-        public void WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(string sheetId, List<OrderBookCSVSnapshotEntry> priceLevelEntries, double lowPriceRange, double highPriceRange, double priceGranularity, int startingRow)
+        public void WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(string sheetId, List<OrderBookCSVSnapshotEntry> priceLevelEntries, double lowPriceRange, double highPriceRange, double priceGranularity, double currentAssetPrice, int startingRow)
         {
             if (priceLevelEntries.Count == 0)
                 return;
@@ -94,26 +94,37 @@ namespace TradingBot.GoogleServices
             var gsh = new GoogleSheetsHelper.GoogleSheetsHelper("security-details.json", sheetId);
             var priceLevelRows = new List<GoogleSheetRow>() { };
             var maxLevel = _priceRangeQuantizer.GetMaxLevel(lowPriceRange, highPriceRange, priceGranularity);
-            double seriesId = 1;    //dummy value required by Google Sheet
+            double seriesIdForBuySellRanges = 1;    //dummy value required by Google Sheet
+            double seriesIdForCurrentAssetPrice = 2;    //dummy value required by Google Sheet
+            var fullVolume = priceLevelEntries.Sum(entry => entry.Quantity);
+
+            //add 1 row with the actual price of the asset
+            GoogleSheetRow currentAssetPriceRow = BuildGoogleSheetRow(cellDateTime, seriesIdForCurrentAssetPrice, currentAssetPrice, (fullVolume*0.05));
+            priceLevelRows.Add(currentAssetPriceRow);
 
             for (int level = 0; level <= maxLevel; level++)
             {
                 var priceLevel = lowPriceRange + (priceGranularity * level);
                 var quantityForLevel = priceLevelEntries.
                     Where(entry => _priceRangeQuantizer.QuantizePrice(entry.PriceLevel, lowPriceRange, highPriceRange, priceGranularity) == level).
-                    Aggregate(0.0,(myinitialQuantity, entry) => myinitialQuantity + entry.Quantity);
+                    Aggregate(0.0, (myinitialQuantity, entry) => myinitialQuantity + entry.Quantity);
 
-                var singlePriceLevelQuantity = new GoogleSheetRow();
-                var cellPrice = new GoogleSheetCell() { NumberValue = priceLevel, NumberFormatPattern = "" };
-                var cellQuantity = new GoogleSheetCell() { NumberValue = quantityForLevel, NumberFormatPattern = "" };
-                var cellSeriesId = new GoogleSheetCell() { NumberValue = seriesId, NumberFormatPattern = "" };
-                singlePriceLevelQuantity.Cells.AddRange(new List<GoogleSheetCell>() { cellDateTime, cellPrice,  cellSeriesId, cellQuantity });
+                GoogleSheetRow singlePriceLevelQuantity = BuildGoogleSheetRow(cellDateTime, seriesIdForBuySellRanges, priceLevel, quantityForLevel);
                 priceLevelRows.Add(singlePriceLevelQuantity);
             }
 
             gsh.AddCells(new GoogleSheetParameters() { SheetName = "RawData", RangeColumnStart = 1, RangeRowStart = startingRow }, priceLevelRows);
         }
 
+        private static GoogleSheetRow BuildGoogleSheetRow(GoogleSheetCell cellDateTime, double seriesIdForBuySellRanges, double priceLevel, double quantityForLevel)
+        {
+            var singlePriceLevelQuantity = new GoogleSheetRow();
+            var cellPrice = new GoogleSheetCell() { NumberValue = priceLevel, NumberFormatPattern = "" };
+            var cellQuantity = new GoogleSheetCell() { NumberValue = quantityForLevel, NumberFormatPattern = "" };
+            var cellSeriesId = new GoogleSheetCell() { NumberValue = seriesIdForBuySellRanges, NumberFormatPattern = "" };
+            singlePriceLevelQuantity.Cells.AddRange(new List<GoogleSheetCell>() { cellDateTime, cellPrice, cellSeriesId, cellQuantity });
+            return singlePriceLevelQuantity;
+        }
 
         public void WriteReferencePriceLevelRanges(string sheetId, double lowPriceRange, double highPriceRange, double priceGranularity)
         {
