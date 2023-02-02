@@ -20,7 +20,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         public async Task CanCancel_After_StartListeningToSingleStream()
         {
             //ARRANGE
-            var sut = new BinanceConnectorWrapper(_logger);
+            var sut = new BinanceConnectorWrapper(_logger, new FutureMarket());
             var cancellationTokenSource = new CancellationTokenSource();
             var stream = "bnbusdt@aggTrade";
             var tasks = new List<Task>();
@@ -52,7 +52,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         public async Task CanReceiveMessages_WhenListeningToSingleStream()
         {
             //ARRANGE
-            var sut = new BinanceConnectorWrapper(_logger);
+            var sut = new BinanceConnectorWrapper(_logger, new FutureMarket());
             var cancellationTokenSource = new CancellationTokenSource();
             var stream = "ethusdt@aggTrade";
             var tasks = new List<Task>();
@@ -89,7 +89,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         public async Task CanReceiveOrderBookMessages_WhenListeningToOrderBook()
         {
             //ARRANGE
-            var sut = new BinanceConnectorWrapper(_logger);
+            var sut = new BinanceConnectorWrapper(_logger, new FutureMarket());
             var cancellationTokenSource = new CancellationTokenSource();
             var stream = "btcusdt@depth@500ms";
             var tasks = new List<Task>();
@@ -123,13 +123,33 @@ namespace TradingBot.Tests.Integration.BinanceServices
         public async Task CanLoadInitialOrderBookSnapshot()
         {
             //ARRANGE
-            var sut = new BinanceConnectorWrapper(_logger);
+            var sut = new BinanceConnectorWrapper(_logger, new FutureMarket());
             var cancellationTokenSource = new CancellationTokenSource();
             var symbol = "BTCUSDT";
             var tasks = new List<Task>();
 
             //ACT
             Task<OrderBookAPISnapshot?> result = sut.LoadInitialOrderBookSnapshot(symbol);
+            try
+            {
+                await result;
+            }
+            catch { }
+
+            //ASSERT
+            Assert.True(result.IsCompletedSuccessfully);
+        }
+
+        [Fact]
+        public async Task CanReceive_SymbolPriceTicker()
+        {
+            //ARRANGE
+            var sut = new BinanceConnectorWrapper(_logger, new FutureMarket());
+            var cancellationTokenSource = new CancellationTokenSource();
+            var symbol = "BTCUSDT";
+
+            //ACT
+            Task<BinanceSymbol> result = sut.GetSymbolPriceTicker(symbol);
             try
             {
                 await result;

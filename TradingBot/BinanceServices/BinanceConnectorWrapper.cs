@@ -10,28 +10,48 @@ namespace TradingBot.BinanceServices
     {
         private readonly string BaseUrl;
         private readonly ILogger<IBinanceConnectorWrapper> _logger;
+        private readonly FutureMarket _futureMarket;
         private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
         private ConcurrentQueue<DiffBookDepthStream> orderBookDiffMessages = new ConcurrentQueue<DiffBookDepthStream>();
 
         //this constructor uses as default address the production address specified in the documentation here https://binance-docs.github.io/apidocs/futures/en/#diff-book-depth-streams
-        public BinanceConnectorWrapper(ILogger<BinanceConnectorWrapper> logger, string baseUrl = "wss://fstream.binance.com")
+        public BinanceConnectorWrapper(ILogger<BinanceConnectorWrapper> logger, FutureMarket futureMarket, string baseUrl = "wss://fstream.binance.com")
         {
             this.BaseUrl = baseUrl;
             this._logger = logger;
+            this._futureMarket = futureMarket;
         }
 
         public ConcurrentQueue<string> Messages { get => messages; }
         public ConcurrentQueue<DiffBookDepthStream> OrderBookDiffMessages { get => orderBookDiffMessages; }
 
         public async Task<OrderBookAPISnapshot?> LoadInitialOrderBookSnapshot(string symbol) {
-            FutureMarket market = new FutureMarket();
-            var receivedMessage = await market.OrderBook(symbol,1000);
+            var receivedMessage = await _futureMarket.OrderBook(symbol,1000);
 
             var trimmedEntry = receivedMessage.Remove(receivedMessage.LastIndexOf("}") + 1);
             OrderBookAPISnapshot? orderBookEntry = JsonConvert.DeserializeObject<OrderBookAPISnapshot>(trimmedEntry);
             return orderBookEntry;    
         }
 
+
+        public async Task<BinanceSymbol> GetSymbolPriceTicker(string symbol)
+        {
+            try
+            {
+                var receivedMessage = await _futureMarket.GetSymbolPriceTicker(symbol);
+                BinanceSymbol? receivedSymbol = JsonConvert.DeserializeObject<BinanceSymbol>(receivedMessage);
+                if (receivedSymbol == null)
+                    throw new InvalidOperationException("Returned Symbol was null");
+                
+                return receivedSymbol;
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex.Message);
+                throw ex;
+            }
+        }
 
         public async Task<int> ListenToOrderBookDepthStream(string stream, CancellationToken token)
         {

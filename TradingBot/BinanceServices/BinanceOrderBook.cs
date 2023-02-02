@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
+using TradingBot.BinanceServices.PayloadModels.API;
 using TradingBot.Models;
 
 namespace TradingBot.BinanceServices
 {
-    public class BinanceOrderBook
+    public class BinanceOrderBook : IOrderBook
     {
         private const int PriceGranularity = 50;
         private const int MillisecondsDelay = 5000;
@@ -12,8 +13,10 @@ namespace TradingBot.BinanceServices
         private readonly IBinanceConnectorWrapper _binanceConnectorWrapper;
         private readonly IOrderBookBuilder _orderBookBuilder;
         private List<OrderBookEntry> _entries;
+        private Symbol _tickerInfo;
 
         public List<OrderBookEntry> Entries { get => _entries; }
+        public Symbol? TickerInfo { get => _tickerInfo; }
 
         public BinanceOrderBook(ILogger<BinanceOrderBook> logger, IBinanceConnectorWrapper binanceConnectorWrapper, IOrderBookBuilder orderBookBuilder)
         {
@@ -27,28 +30,35 @@ namespace TradingBot.BinanceServices
         {
             try
             {
+                
+                //provides initial info about the ticker
+                BinanceSymbol binanceSymbol = await _binanceConnectorWrapper.GetSymbolPriceTicker(symbol.ToUpperInvariant());
+                _tickerInfo = binanceSymbol.ToSymbol();
+
                 //start listening to the stream. We should be waiting that the first elements arrive before moving forward
                 var stream = $"{symbol.ToLowerInvariant()}@depth@500ms";
                 Task<int> taskStreamListening = _binanceConnectorWrapper.ListenToOrderBookDepthStream(stream, cancellationToken);
 
-                //poor's man delay for the order book stream to start
+                //TODO: change this, it is a poor man's delay for the order book stream to start
                 await Task.Delay(5000);
 
-                //get the initial snapshot
                 _logger.LogInformation("Fetching initial snapshot");
                 PayloadModels.API.OrderBookAPISnapshot? initialSnapshot = await _binanceConnectorWrapper.LoadInitialOrderBookSnapshot(symbol.ToUpperInvariant());
                 if (initialSnapshot == null)
                 {
                     throw new Exception("the returned initial Order book snapshot was null. This was unexpected.");
                 }
+
                 _logger.LogInformation($"Initial Snapshot last update ID:{initialSnapshot.LastUpdateId}");
                 _orderBookBuilder.BuildFromSnapshot(initialSnapshot, Entries, PriceGranularity);
 
                 //keep adding up order book entries as they come, until cancellation is requested
                 while (cancellationToken.IsCancellationRequested == false)
                 {
-                    await Task.Delay(MillisecondsDelay);  //give some rest to the CPU
+                    BinanceSymbol updatedSymbolInfo = await _binanceConnectorWrapper.GetSymbolPriceTicker(symbol.ToUpperInvariant());
+                    _tickerInfo = updatedSymbolInfo.ToSymbol();
                     _orderBookBuilder.BuildFromBidAskEntriesStream(_binanceConnectorWrapper.OrderBookDiffMessages, Entries, initialSnapshot.LastUpdateId, PriceGranularity);
+                    await Task.Delay(MillisecondsDelay);  //give some rest to the CPU
                 }
 
             }

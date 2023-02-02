@@ -14,7 +14,7 @@ namespace TradingBot.Tests.Integration
             _client = new WebApplication(_testOutputHelper).CreateClient();
         }
 
-        [Fact]
+        [Fact(Skip =("Keeping disabled the TradingView part for now"))]
         public async Task ReturnsSuccessWhenInvokedWithCorrectParameters()
         {
             //Arrange

@@ -23,14 +23,14 @@ namespace TradingBot.Tests.Integration.CommonServices
             _loggerBinanceConnector = XUnitLogger.CreateLogger<BinanceConnectorWrapper>(testOutputHelper);
         }
 
-        [Fact(Skip ="Run manually")]
+        [Fact]
         public async void CanUploadOrderBookData_FromRealOrderBookRequest()
         {
             string PRODUCTION_ADDRESS_FOR_FUTURES_WEBSOCKET_STREAM = "wss://fstream.binance.com"; //as explained in https://binance-docs.github.io/apidocs/futures/en/#diff-book-depth-streams
 
             //ARRANGE
             var cancellationTokenSource = new CancellationTokenSource();
-            var binanceConnectorWrapper = new BinanceConnectorWrapper(_loggerBinanceConnector, PRODUCTION_ADDRESS_FOR_FUTURES_WEBSOCKET_STREAM);
+            var binanceConnectorWrapper = new BinanceConnectorWrapper(_loggerBinanceConnector, new FutureMarket(), PRODUCTION_ADDRESS_FOR_FUTURES_WEBSOCKET_STREAM);
             var symbol = "BTCUSDT";
             var tasks = new List<Task>();
             var binanceOrderBook = new BinanceOrderBook(_loggerOrderBook, binanceConnectorWrapper, new OrderBookBuilder(_loggerOrderBookBuilder));
@@ -40,12 +40,13 @@ namespace TradingBot.Tests.Integration.CommonServices
             var sut = new OrderBookGoogleSheetUploader(_loggerGoogleSheetUploader, "1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE", priceRangeQuantizer, googleSheetWriter);
 
             //ACT
+            int minutesAcquisitionDuration = 30;
+            int secondsIntervalBetweenAcquisition = 30;
             Task populateOrderBook = binanceOrderBook.Build(symbol, cancellationTokenSource.Token);
-            Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationTokenSource.Token, 300, binanceOrderBook.Entries, 21000,24000,23000,100);
+            Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationTokenSource.Token, secondsIntervalBetweenAcquisition, binanceOrderBook.Entries, 23000,25000,200, binanceOrderBook);
             Task taskCancelToken = Task.Run(async () =>
             {
-                int minutesAcquistionDuration = 240;
-                await Task.Delay(minutesAcquistionDuration * 60000);
+                await Task.Delay(minutesAcquisitionDuration * 60000);
                 cancellationTokenSource.Cancel();
                 return Task.CompletedTask;
             });

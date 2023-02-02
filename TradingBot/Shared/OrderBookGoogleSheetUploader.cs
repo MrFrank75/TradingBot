@@ -51,20 +51,28 @@ namespace TradingBot.Shared
             }
         }
 
-        public async Task ContinuoslyUpdateOrderBookInGoogleSheetByRow(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations, List<OrderBookEntry> Entries, double lowPriceRange, double highPriceRange, double priceGranularity, double currentAssetPrice)
+        public async Task ContinuoslyUpdateOrderBookInGoogleSheetByRow(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations, List<OrderBookEntry> Entries, double lowPriceRange, double highPriceRange, double priceGranularity, IOrderBook orderBook)
         {
             int startingRow = 2;
             var maxLevel = _priceRangeQuantizer.GetMaxLevel(lowPriceRange, highPriceRange, priceGranularity);
+
 
             while (cancellationToken.IsCancellationRequested == false)
             {
                 try
                 {
+                    if (orderBook.TickerInfo == null)
+                    {
+                        _logger.LogInformation("Ticker info not loaded yet. This update will be skipped");
+                        await Task.Delay(intervalSecondsBetweenGenerations * MS_IN_A_SECOND);
+                        continue;
+                    }
                     string generationUtcDateTime = DateTime.UtcNow.ToString("HHmmssff");
+                    //TODO: remove the usage of entries and take them from the OrderBook
                     List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, generationUtcDateTime)).ToList();
                     if (orderBookCSVSnapshotEntries.Any()) {
-                        _gsw.WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(_googleSheetId, orderBookCSVSnapshotEntries, lowPriceRange, highPriceRange, priceGranularity, currentAssetPrice, startingRow);
-                        startingRow += (maxLevel + 1);
+                        int writtenRows = _gsw.WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(_googleSheetId, orderBookCSVSnapshotEntries, lowPriceRange, highPriceRange, priceGranularity, orderBook.TickerInfo.Price, startingRow);
+                        startingRow += (writtenRows + 1);
                     }
 
                     await Task.Delay(intervalSecondsBetweenGenerations * MS_IN_A_SECOND);

@@ -80,10 +80,10 @@ namespace TradingBot.GoogleServices
         }
 
 
-        public void WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(string sheetId, List<OrderBookCSVSnapshotEntry> priceLevelEntries, double lowPriceRange, double highPriceRange, double priceGranularity, double currentAssetPrice, int startingRow)
+        public int WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(string sheetId, List<OrderBookCSVSnapshotEntry> priceLevelEntries, double lowPriceRange, double highPriceRange, double priceGranularity, double currentAssetPrice, int startingRow)
         {
             if (priceLevelEntries.Count == 0)
-                return;
+                return 0;
 
             var cellDateTime = new GoogleSheetCell() { CellValue = priceLevelEntries.First().GenerationUtcDateTime };
             long dateTimeNumber;
@@ -114,6 +114,7 @@ namespace TradingBot.GoogleServices
             }
 
             gsh.AddCells(new GoogleSheetParameters() { SheetName = "RawData", RangeColumnStart = 1, RangeRowStart = startingRow }, priceLevelRows);
+            return priceLevelRows.Count;
         }
 
         private static GoogleSheetRow BuildGoogleSheetRow(GoogleSheetCell cellDateTime, double seriesIdForBuySellRanges, double priceLevel, double quantityForLevel)

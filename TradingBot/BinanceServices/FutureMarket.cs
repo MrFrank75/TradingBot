@@ -37,5 +37,19 @@ namespace TradingBot.BinanceServices
 
             return result;
         }
+
+        private const string SYMBOL_PRICE_TICKER = "/fapi/v1/ticker/price";
+        public async Task<string> GetSymbolPriceTicker(string symbol)
+        {
+            var result = await this.SendPublicAsync<string>(
+                SYMBOL_PRICE_TICKER,
+                HttpMethod.Get,
+                query: new Dictionary<string, object>
+                {
+                    { "symbol", symbol }
+                });
+
+            return result;
+        }
     }
 }
