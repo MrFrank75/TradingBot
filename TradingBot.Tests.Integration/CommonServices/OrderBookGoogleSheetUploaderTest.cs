@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using TradingBot.BinanceServices;
-using TradingBot.Shared;
+using TradingBot.OrderBook;
 using TradingBot.GoogleServices;
 using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
@@ -40,10 +40,10 @@ namespace TradingBot.Tests.Integration.CommonServices
             var sut = new OrderBookGoogleSheetUploader(_loggerGoogleSheetUploader, "1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE", priceRangeQuantizer, googleSheetWriter);
 
             //ACT
-            int minutesAcquisitionDuration = 30;
-            int secondsIntervalBetweenAcquisition = 30;
+            int minutesAcquisitionDuration = 5;
+            int secondsIntervalBetweenAcquisition = 10;
             Task populateOrderBook = binanceOrderBook.Build(symbol, cancellationTokenSource.Token);
-            Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationTokenSource.Token, secondsIntervalBetweenAcquisition, binanceOrderBook.Entries, 23000,25000,200, binanceOrderBook);
+            Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationTokenSource.Token, secondsIntervalBetweenAcquisition, binanceOrderBook.Entries, 22500,25500,100, binanceOrderBook);
             Task taskCancelToken = Task.Run(async () =>
             {
                 await Task.Delay(minutesAcquisitionDuration * 60000);

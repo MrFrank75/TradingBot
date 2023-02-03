@@ -24,7 +24,7 @@ namespace TradingBot.BinanceServices
         /// <param name="symbol">Trading symbol, e.g. BNBUSDT.</param>
         /// <param name="limit">If limit > 5000, then the response will truncate to 5000.</param>
         /// <returns>Order book.</returns>
-        public async Task<string> OrderBook(string symbol, int? limit = null)
+        public async Task<string> GetOrderBookSnapshot(string symbol, int? limit = null)
         {
             var result = await this.SendPublicAsync<string>(
                 ORDER_BOOK,

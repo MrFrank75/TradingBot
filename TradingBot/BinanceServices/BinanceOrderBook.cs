@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Text;
-using TradingBot.BinanceServices.PayloadModels.API;
+﻿using TradingBot.BinanceServices.PayloadModels.API;
 using TradingBot.Models;
+using TradingBot.OrderBook;
 
 namespace TradingBot.BinanceServices
 {
@@ -68,49 +67,6 @@ namespace TradingBot.BinanceServices
                 throw;
             }
             _logger.LogInformation("Populate has been correctly terminated");
-        }
-
-
-
-
-        private async Task ContinuoslyGenerateOrderBookCSVSnapshot(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations)
-        {
-            string csvDirectory = $"{Environment.CurrentDirectory}\\{DateTime.Now.ToString("yyyyMMdd-hhmmss")}";
-            Directory.CreateDirectory(csvDirectory);
-
-            while (cancellationToken.IsCancellationRequested == false)
-            {
-                try
-                {
-                    string generationId = Guid.NewGuid().ToString();
-                    List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, generationId)).ToList();
-
-                    List<string> csv = new List<string>();
-                    foreach (var item in orderBookCSVSnapshotEntries)
-                    {
-                        csv.Add($"{item.GenerationUtcDateTime};{item.PriceLevel};{item.Quantity.ToString("0.00")}");
-                    }
-                    File.AppendAllLines($"{csvDirectory}\\snapshot.csv", csv);
-
-                    _logger.LogInformation($"CSV Snapshot generated. Contains {orderBookCSVSnapshotEntries.Count} entries");
-                    await Task.Delay(intervalSecondsBetweenGenerations * 1000);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"Exception caught. Message:{ex.Message}");
-                    throw;
-                }
-            }
-        }
-
-        private OrderBookCSVSnapshotEntry CreateOrderBookCSVSnapshotEntry(OrderBookEntry item, string generationId)
-        {
-            return new OrderBookCSVSnapshotEntry
-            {
-                GenerationUtcDateTime = generationId,
-                PriceLevel = item.PriceLevel,
-                Quantity = item.Quantity
-            };
         }
     }
 }

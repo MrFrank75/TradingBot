@@ -1,8 +1,7 @@
 ﻿using TradingBot.BinanceServices;
 using TradingBot.GoogleServices;
-using TradingBot.Models;
 
-namespace TradingBot.Shared
+namespace TradingBot.OrderBook
 {
     public class OrderBookGoogleSheetUploader
     {
@@ -11,6 +10,12 @@ namespace TradingBot.Shared
         private readonly string _googleSheetId;
         private readonly IPriceRangeQuantizer _priceRangeQuantizer;
         private readonly IGoogleSheetWriter _gsw;
+
+
+        public OrderBookGoogleSheetUploader(ILogger<OrderBookGoogleSheetUploader> logger,IPriceRangeQuantizer priceRangeQuantizer, IGoogleSheetWriter googleSheetWriter)
+            :this(logger, "1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE", priceRangeQuantizer, googleSheetWriter)
+        { }
+
 
         public OrderBookGoogleSheetUploader(ILogger<OrderBookGoogleSheetUploader> logger, string googleSheetId, IPriceRangeQuantizer priceRangeQuantizer, IGoogleSheetWriter googleSheetWriter)
         {
@@ -64,13 +69,15 @@ namespace TradingBot.Shared
                     if (orderBook.TickerInfo == null)
                     {
                         _logger.LogInformation("Ticker info not loaded yet. This update will be skipped");
-                        await Task.Delay(intervalSecondsBetweenGenerations * MS_IN_A_SECOND);
+                        await Task.Delay(1000);
                         continue;
                     }
-                    string generationUtcDateTime = DateTime.UtcNow.ToString("HHmmssff");
+                    string secondsFromBeginningOfTheDay = Convert.ToInt64((DateTime.UtcNow - new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day)).TotalSeconds).ToString();
+                    
                     //TODO: remove the usage of entries and take them from the OrderBook
-                    List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, generationUtcDateTime)).ToList();
+                    List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, secondsFromBeginningOfTheDay)).ToList();
                     if (orderBookCSVSnapshotEntries.Any()) {
+                        _logger.LogInformation($"Updating Google Sheet with rowsId {secondsFromBeginningOfTheDay} - Ticker {orderBook.TickerInfo.Ticker} - Ticker Price {orderBook.TickerInfo.Price}");
                         int writtenRows = _gsw.WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(_googleSheetId, orderBookCSVSnapshotEntries, lowPriceRange, highPriceRange, priceGranularity, orderBook.TickerInfo.Price, startingRow);
                         startingRow += (writtenRows + 1);
                     }

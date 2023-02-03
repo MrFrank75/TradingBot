@@ -3,8 +3,7 @@ using GoogleSheetsHelper;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Diagnostics;
 using System.Drawing;
-using TradingBot.Shared;
-using TradingBot.Models;
+using TradingBot.OrderBook;
 
 namespace TradingBot.GoogleServices
 {
@@ -87,8 +86,8 @@ namespace TradingBot.GoogleServices
 
             var cellDateTime = new GoogleSheetCell() { CellValue = priceLevelEntries.First().GenerationUtcDateTime };
             long dateTimeNumber;
-            var conversionSuccesful = long.TryParse(priceLevelEntries.First().GenerationUtcDateTime, out dateTimeNumber);
-            if (conversionSuccesful) { cellDateTime.NumberValue = dateTimeNumber; };
+            var conversionSuccessful = long.TryParse(priceLevelEntries.First().GenerationUtcDateTime, out dateTimeNumber);
+            if (conversionSuccessful) { cellDateTime.NumberValue = dateTimeNumber; };
 
 
             var gsh = new GoogleSheetsHelper.GoogleSheetsHelper("security-details.json", sheetId);
@@ -99,7 +98,7 @@ namespace TradingBot.GoogleServices
             var fullVolume = priceLevelEntries.Sum(entry => entry.Quantity);
 
             //add 1 row with the actual price of the asset
-            GoogleSheetRow currentAssetPriceRow = BuildGoogleSheetRow(cellDateTime, seriesIdForCurrentAssetPrice, currentAssetPrice, (fullVolume*0.05));
+            GoogleSheetRow currentAssetPriceRow = BuildGoogleSheetRow(cellDateTime, seriesIdForCurrentAssetPrice, currentAssetPrice, (fullVolume*0.01));
             priceLevelRows.Add(currentAssetPriceRow);
 
             for (int level = 0; level <= maxLevel; level++)

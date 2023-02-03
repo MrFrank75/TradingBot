@@ -1,4 +1,4 @@
-﻿namespace TradingBot.Models
+﻿namespace TradingBot.OrderBook
 {
     public class OrderBookEntry
     {

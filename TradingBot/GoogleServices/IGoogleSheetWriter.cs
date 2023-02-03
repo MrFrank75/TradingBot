@@ -1,4 +1,4 @@
-﻿using TradingBot.Models;
+﻿using TradingBot.OrderBook;
 
 namespace TradingBot.GoogleServices
 {

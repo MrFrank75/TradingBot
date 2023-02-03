@@ -1,4 +1,4 @@
-﻿using TradingBot.Shared;
+﻿using TradingBot.OrderBook;
 using Xunit.Abstractions;
 
 namespace TradingBot.Tests.Integration.CommonServices

@@ -5,8 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingBot.BinanceServices;
-using TradingBot.Shared;
-using TradingBot.Models;
+using TradingBot.OrderBook;
 using TradingBot.Tests.Integration.XUnitUtilities;
 using Xunit.Abstractions;
 

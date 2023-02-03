@@ -26,7 +26,7 @@ namespace TradingBot.BinanceServices
         public ConcurrentQueue<DiffBookDepthStream> OrderBookDiffMessages { get => orderBookDiffMessages; }
 
         public async Task<OrderBookAPISnapshot?> LoadInitialOrderBookSnapshot(string symbol) {
-            var receivedMessage = await _futureMarket.OrderBook(symbol,1000);
+            var receivedMessage = await _futureMarket.GetOrderBookSnapshot(symbol,1000);
 
             var trimmedEntry = receivedMessage.Remove(receivedMessage.LastIndexOf("}") + 1);
             OrderBookAPISnapshot? orderBookEntry = JsonConvert.DeserializeObject<OrderBookAPISnapshot>(trimmedEntry);
