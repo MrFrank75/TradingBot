@@ -1,8 +1,4 @@
-﻿using Google.Apis.Sheets.v4.Data;
-using GoogleSheetsHelper;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Diagnostics;
-using System.Drawing;
+﻿using GoogleSheetsHelper;
 using TradingBot.OrderBook;
 
 namespace TradingBot.GoogleServices
@@ -79,7 +75,7 @@ namespace TradingBot.GoogleServices
         }
 
 
-        public int WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(string sheetId, List<OrderBookCSVSnapshotEntry> priceLevelEntries, double lowPriceRange, double highPriceRange, double priceGranularity, double currentAssetPrice, int startingRow)
+        public int WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(string sheetId, List<OrderBookCSVSnapshotEntry> priceLevelEntries, double lowPriceRange, double highPriceRange, double priceGranularity, int percToFilterOut, double currentAssetPrice, int startingRow)
         {
             if (priceLevelEntries.Count == 0)
                 return 0;
@@ -108,6 +104,9 @@ namespace TradingBot.GoogleServices
                     Where(entry => _priceRangeQuantizer.QuantizePrice(entry.PriceLevel, lowPriceRange, highPriceRange, priceGranularity) == level).
                     Aggregate(0.0, (myinitialQuantity, entry) => myinitialQuantity + entry.Quantity);
 
+                if (quantityForLevel < (fullVolume * percToFilterOut / 100))
+                    quantityForLevel = 0;
+
                 GoogleSheetRow singlePriceLevelQuantity = BuildGoogleSheetRow(cellDateTime, seriesIdForBuySellRanges, priceLevel, quantityForLevel);
                 priceLevelRows.Add(singlePriceLevelQuantity);
             }
@@ -120,7 +119,11 @@ namespace TradingBot.GoogleServices
         {
             var singlePriceLevelQuantity = new GoogleSheetRow();
             var cellPrice = new GoogleSheetCell() { NumberValue = priceLevel, NumberFormatPattern = "" };
+            
             var cellQuantity = new GoogleSheetCell() { NumberValue = quantityForLevel, NumberFormatPattern = "" };
+            if (quantityForLevel == 0)
+                cellQuantity = new GoogleSheetCell() { CellValue = "" };
+
             var cellSeriesId = new GoogleSheetCell() { NumberValue = seriesIdForBuySellRanges, NumberFormatPattern = "" };
             singlePriceLevelQuantity.Cells.AddRange(new List<GoogleSheetCell>() { cellDateTime, cellPrice, cellSeriesId, cellQuantity });
             return singlePriceLevelQuantity;

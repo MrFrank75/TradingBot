@@ -1,5 +1,4 @@
-﻿using TradingBot.BinanceServices;
-using TradingBot.GoogleServices;
+﻿using TradingBot.GoogleServices;
 
 namespace TradingBot.OrderBook
 {
@@ -7,26 +6,18 @@ namespace TradingBot.OrderBook
     {
         private const int MS_IN_A_SECOND = 1000;
         private readonly ILogger<OrderBookGoogleSheetUploader> _logger;
-        private readonly string _googleSheetId;
         private readonly IPriceRangeQuantizer _priceRangeQuantizer;
         private readonly IGoogleSheetWriter _gsw;
 
 
         public OrderBookGoogleSheetUploader(ILogger<OrderBookGoogleSheetUploader> logger,IPriceRangeQuantizer priceRangeQuantizer, IGoogleSheetWriter googleSheetWriter)
-            :this(logger, "1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE", priceRangeQuantizer, googleSheetWriter)
-        { }
-
-
-        public OrderBookGoogleSheetUploader(ILogger<OrderBookGoogleSheetUploader> logger, string googleSheetId, IPriceRangeQuantizer priceRangeQuantizer, IGoogleSheetWriter googleSheetWriter)
         {
             _logger = logger;
-            _googleSheetId = googleSheetId;
             _priceRangeQuantizer = priceRangeQuantizer;
             _gsw = googleSheetWriter;
-
         }
 
-        public async Task ContinuoslyUpdateOrderBookInGoogleSheetByColumn(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations, List<OrderBookEntry> Entries,double lowPriceRange, double highPriceRange, double priceGranularity)
+        public async Task ContinuoslyUpdateOrderBookInGoogleSheetByColumn(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations,string googleSheetId, List<OrderBookEntry> Entries,double lowPriceRange, double highPriceRange, double priceGranularity)
         {
             int startingColumn = 2;
             bool headerCreated = false;
@@ -37,13 +28,13 @@ namespace TradingBot.OrderBook
                 {
                     if (headerCreated== false)
                     {
-                        _gsw.WriteReferencePriceLevelRanges(_googleSheetId, lowPriceRange, highPriceRange, priceGranularity);
+                        _gsw.WriteReferencePriceLevelRanges(googleSheetId, lowPriceRange, highPriceRange, priceGranularity);
                         headerCreated= true;
                     }
 
                     string generationUtcDateTime = DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-ff");
                     List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, generationUtcDateTime)).ToList();
-                    _gsw.WritePriceLevelsRangeWithQuantitiesIntoSheetByColumn(_googleSheetId, orderBookCSVSnapshotEntries, lowPriceRange,highPriceRange,priceGranularity, startingColumn);
+                    _gsw.WritePriceLevelsRangeWithQuantitiesIntoSheetByColumn(googleSheetId, orderBookCSVSnapshotEntries, lowPriceRange,highPriceRange,priceGranularity, startingColumn);
                     startingColumn++;
 
                     await Task.Delay(intervalSecondsBetweenGenerations * MS_IN_A_SECOND);
@@ -56,7 +47,7 @@ namespace TradingBot.OrderBook
             }
         }
 
-        public async Task ContinuoslyUpdateOrderBookInGoogleSheetByRow(CancellationToken cancellationToken, int intervalSecondsBetweenGenerations, List<OrderBookEntry> Entries, double lowPriceRange, double highPriceRange, double priceGranularity, IOrderBook orderBook)
+        public async Task ContinuoslyUpdateOrderBookInGoogleSheetByRow(CancellationToken cancellationToken,string googleSheetId, int intervalSecondsBetweenGenerations, double lowPriceRange, double highPriceRange, double priceGranularity, int lowVolumePercToFilterOut, IOrderBook orderBook)
         {
             int startingRow = 2;
             var maxLevel = _priceRangeQuantizer.GetMaxLevel(lowPriceRange, highPriceRange, priceGranularity);
@@ -74,11 +65,10 @@ namespace TradingBot.OrderBook
                     }
                     string secondsFromBeginningOfTheDay = Convert.ToInt64((DateTime.UtcNow - new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day)).TotalSeconds).ToString();
                     
-                    //TODO: remove the usage of entries and take them from the OrderBook
-                    List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, secondsFromBeginningOfTheDay)).ToList();
+                    List<OrderBookCSVSnapshotEntry> orderBookCSVSnapshotEntries = orderBook.Entries.AsParallel().Select(item => CreateOrderBookCSVSnapshotEntry(item, secondsFromBeginningOfTheDay)).ToList();
                     if (orderBookCSVSnapshotEntries.Any()) {
                         _logger.LogInformation($"Updating Google Sheet with rowsId {secondsFromBeginningOfTheDay} - Ticker {orderBook.TickerInfo.Ticker} - Ticker Price {orderBook.TickerInfo.Price}");
-                        int writtenRows = _gsw.WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(_googleSheetId, orderBookCSVSnapshotEntries, lowPriceRange, highPriceRange, priceGranularity, orderBook.TickerInfo.Price, startingRow);
+                        int writtenRows = _gsw.WritePriceLevelsRangeWithQuantitiesIntoSheetByRow(googleSheetId, orderBookCSVSnapshotEntries, lowPriceRange, highPriceRange, priceGranularity, lowVolumePercToFilterOut, orderBook.TickerInfo.Price, startingRow);
                         startingRow += (writtenRows + 1);
                     }
 

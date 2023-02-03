@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.Xml;
-
-namespace TradingBot.OrderBook
+﻿namespace TradingBot.OrderBook
 {
     public class PriceRangeQuantizer : IPriceRangeQuantizer
     {

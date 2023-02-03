@@ -23,7 +23,7 @@ namespace TradingBot.Tests.Integration.CommonServices
             _loggerBinanceConnector = XUnitLogger.CreateLogger<BinanceConnectorWrapper>(testOutputHelper);
         }
 
-        [Fact]
+        [Fact(Skip ="Used only for manual generation of the heating map")]
         public async void CanUploadOrderBookData_FromRealOrderBookRequest()
         {
             string PRODUCTION_ADDRESS_FOR_FUTURES_WEBSOCKET_STREAM = "wss://fstream.binance.com"; //as explained in https://binance-docs.github.io/apidocs/futures/en/#diff-book-depth-streams
@@ -37,13 +37,13 @@ namespace TradingBot.Tests.Integration.CommonServices
             IPriceRangeQuantizer priceRangeQuantizer = new PriceRangeQuantizer();
             IGoogleSheetWriter googleSheetWriter = new GoogleSheetWriter(priceRangeQuantizer);
             
-            var sut = new OrderBookGoogleSheetUploader(_loggerGoogleSheetUploader, "1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE", priceRangeQuantizer, googleSheetWriter);
+            var sut = new OrderBookGoogleSheetUploader(_loggerGoogleSheetUploader, priceRangeQuantizer, googleSheetWriter);
 
             //ACT
             int minutesAcquisitionDuration = 5;
             int secondsIntervalBetweenAcquisition = 10;
             Task populateOrderBook = binanceOrderBook.Build(symbol, cancellationTokenSource.Token);
-            Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationTokenSource.Token, secondsIntervalBetweenAcquisition, binanceOrderBook.Entries, 22500,25500,100, binanceOrderBook);
+            Task continuoslyUploadOrderBookData = sut.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationTokenSource.Token, "1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE", secondsIntervalBetweenAcquisition, 22500,25500,100,0, binanceOrderBook);
             Task taskCancelToken = Task.Run(async () =>
             {
                 await Task.Delay(minutesAcquisitionDuration * 60000);

@@ -1,22 +1,19 @@
-﻿using TradingBot.BinanceServices;
-using TradingBot.GoogleServices;
-
-namespace TradingBot.OrderBook
+﻿namespace TradingBot.OrderBook
 {
     public class OrderBookHeatingMapGenerator
     {
-        private readonly IOrderBook binanceOrderBook;
-        private readonly OrderBookGoogleSheetUploader orderBookGoogleSheetUploader;
+        private readonly IOrderBook _orderBook;
+        private readonly OrderBookGoogleSheetUploader _orderBookGoogleSheetUploader;
 
-        public OrderBookHeatingMapGenerator(IOrderBook binanceOrderBook, OrderBookGoogleSheetUploader orderBookGoogleSheetUploader)
+        public OrderBookHeatingMapGenerator(IOrderBook orderBook, OrderBookGoogleSheetUploader orderBookGoogleSheetUploader)
         {
-            this.binanceOrderBook = binanceOrderBook;
-            this.orderBookGoogleSheetUploader = orderBookGoogleSheetUploader;
+            _orderBook = orderBook;
+            _orderBookGoogleSheetUploader = orderBookGoogleSheetUploader;
         }
-        public async Task Run(double lowPriceRange, double highPriceRange, double priceGranularity, int secondsIntervalBetweenAcquisition, string symbol, CancellationToken cancellationToken)
+        public async Task Run(string googleSheetId, double lowPriceRange, double highPriceRange, double priceGranularity, int lowVolumePercToFilterOut, int secondsIntervalBetweenAcquisition, string symbol, CancellationToken cancellationToken)
         {
-            Task populateOrderBook = binanceOrderBook.Build(symbol, cancellationToken);
-            Task continuoslyUploadOrderBookData = orderBookGoogleSheetUploader.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationToken, secondsIntervalBetweenAcquisition, binanceOrderBook.Entries, lowPriceRange, highPriceRange, priceGranularity, binanceOrderBook);
+            Task populateOrderBook = _orderBook.Build(symbol, cancellationToken);
+            Task continuoslyUploadOrderBookData = _orderBookGoogleSheetUploader.ContinuoslyUpdateOrderBookInGoogleSheetByRow(cancellationToken, googleSheetId, secondsIntervalBetweenAcquisition, lowPriceRange, highPriceRange, priceGranularity, lowVolumePercToFilterOut,_orderBook);
             await Task.WhenAll(populateOrderBook, continuoslyUploadOrderBookData);
         }
     }
