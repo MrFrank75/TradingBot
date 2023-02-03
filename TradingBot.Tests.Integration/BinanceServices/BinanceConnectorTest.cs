@@ -6,7 +6,6 @@ using Xunit.Abstractions;
 
 namespace TradingBot.Tests.Integration.BinanceServices
 {
-
     public class BinanceConnectorTest
     {
         private readonly ILogger<BinanceConnectorWrapper> _logger;
