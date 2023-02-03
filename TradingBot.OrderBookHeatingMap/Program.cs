@@ -28,7 +28,7 @@ namespace TradingBot.OrderBookHeatingMap
             OrderBookHeatingMapGenerator orderBookHeatingMapGenerator = host.Services.GetRequiredService<OrderBookHeatingMapGenerator>();
 
             Console.WriteLine("Starting generation of orderbook...");
-            Task orderBookGeneration = orderBookHeatingMapGenerator.Run("1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE",23300, 23800, 30,5, 10, "BTCUSDT", cts.Token);
+            Task orderBookGeneration = orderBookHeatingMapGenerator.Run("1PMYJvYX8ryckzLiH8xkDdrrYDi7Q64GbPNsMnLDATyE",23300, 23800, 30,1, 60, "BTCUSDT", cts.Token);
             Task keyread = Task.Run(() =>
             {
                 char readChar = ' ';
