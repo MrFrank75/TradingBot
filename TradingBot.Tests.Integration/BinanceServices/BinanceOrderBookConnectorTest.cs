@@ -6,20 +6,20 @@ using Xunit.Abstractions;
 
 namespace TradingBot.Tests.Integration.BinanceServices
 {
-    public class BinanceConnectorTest
+    public class BinanceOrderBookConnectorTest
     {
-        private readonly ILogger<BinanceConnectorWrapper> _logger;
+        private readonly ILogger<BinanceOrderBookConnector> _logger;
 
-        public BinanceConnectorTest(ITestOutputHelper testOutputHelper)
+        public BinanceOrderBookConnectorTest(ITestOutputHelper testOutputHelper)
         {
-            _logger = XUnitLogger.CreateLogger<BinanceConnectorWrapper>(testOutputHelper);
+            _logger = XUnitLogger.CreateLogger<BinanceOrderBookConnector>(testOutputHelper);
         }
 
         [Fact]
         public async Task CanCancel_After_StartListeningToSingleStream()
         {
             //ARRANGE
-            var sut = new BinanceConnectorWrapper(_logger, new FutureMarket());
+            var sut = new BinanceOrderBookConnector(_logger, new FutureMarket());
             var cancellationTokenSource = new CancellationTokenSource();
             var stream = "bnbusdt@aggTrade";
             var tasks = new List<Task>();
@@ -51,7 +51,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         public async Task CanReceiveMessages_WhenListeningToSingleStream()
         {
             //ARRANGE
-            var sut = new BinanceConnectorWrapper(_logger, new FutureMarket());
+            var sut = new BinanceOrderBookConnector(_logger, new FutureMarket());
             var cancellationTokenSource = new CancellationTokenSource();
             var stream = "ethusdt@aggTrade";
             var tasks = new List<Task>();
@@ -88,7 +88,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         public async Task CanReceiveOrderBookMessages_WhenListeningToOrderBook()
         {
             //ARRANGE
-            var sut = new BinanceConnectorWrapper(_logger, new FutureMarket());
+            var sut = new BinanceOrderBookConnector(_logger, new FutureMarket());
             var cancellationTokenSource = new CancellationTokenSource();
             var stream = "btcusdt@depth@500ms";
             var tasks = new List<Task>();
@@ -122,7 +122,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         public async Task CanLoadInitialOrderBookSnapshot()
         {
             //ARRANGE
-            var sut = new BinanceConnectorWrapper(_logger, new FutureMarket());
+            var sut = new BinanceOrderBookConnector(_logger, new FutureMarket());
             var cancellationTokenSource = new CancellationTokenSource();
             var symbol = "BTCUSDT";
             var tasks = new List<Task>();
@@ -143,7 +143,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         public async Task CanReceive_SymbolPriceTicker()
         {
             //ARRANGE
-            var sut = new BinanceConnectorWrapper(_logger, new FutureMarket());
+            var sut = new BinanceOrderBookConnector(_logger, new FutureMarket());
             var cancellationTokenSource = new CancellationTokenSource();
             var symbol = "BTCUSDT";
 

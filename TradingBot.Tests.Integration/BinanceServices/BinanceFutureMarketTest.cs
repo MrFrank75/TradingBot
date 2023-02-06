@@ -37,7 +37,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
 
 
         [Fact]
-        public async void CanListOpenOrders()
+        public async void CanListSingleOpenOrder()
         {
 
             if (File.Exists("BinanceApiKeys.txt") == false)
@@ -51,6 +51,30 @@ namespace TradingBot.Tests.Integration.BinanceServices
             {
                 var sut = new FutureMarket(apiKey: apiKey, apiSecret: apiSecret);
                 var result = await sut.CurrentOpenOrders("LTCUSDT", 5000);
+                Assert.NotNull(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
+
+        [Fact]
+        public async void CanListMultipleOpenOrder()
+        {
+
+            if (File.Exists("BinanceApiKeys.txt") == false)
+                throw new Exception("Please place a file containing api key and secret in the folder where the tests are running. Normally it is bin/debug/net7.0");
+
+            var apiKeyAndSecret = File.ReadAllLines("BinanceApiKeys.txt");
+            var apiKey = apiKeyAndSecret[0];
+            var apiSecret = apiKeyAndSecret[1];
+
+            try
+            {
+                var sut = new FutureMarket(apiKey: apiKey, apiSecret: apiSecret);
+                var result = await sut.CurrentOpenOrders(recvWindow: 5000);
                 Assert.NotNull(result);
             }
             catch (Exception ex)

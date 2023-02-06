@@ -9,7 +9,7 @@ namespace TradingBot.BinanceServices
         private const int PriceGranularity = 50;
         private const int MillisecondsDelay = 5000;
         private readonly ILogger<BinanceOrderBook> _logger;
-        private readonly IBinanceConnectorWrapper _binanceConnectorWrapper;
+        private readonly IBinanceOrderBookConnector _binanceConnectorWrapper;
         private readonly IOrderBookBuilder _orderBookBuilder;
         private List<OrderBookEntry> _entries;
         private Symbol _tickerInfo;
@@ -17,7 +17,7 @@ namespace TradingBot.BinanceServices
         public List<OrderBookEntry> Entries { get => _entries; }
         public Symbol? TickerInfo { get => _tickerInfo; }
 
-        public BinanceOrderBook(ILogger<BinanceOrderBook> logger, IBinanceConnectorWrapper binanceConnectorWrapper, IOrderBookBuilder orderBookBuilder)
+        public BinanceOrderBook(ILogger<BinanceOrderBook> logger, IBinanceOrderBookConnector binanceConnectorWrapper, IOrderBookBuilder orderBookBuilder)
         {
             _logger = logger;
             _binanceConnectorWrapper = binanceConnectorWrapper;

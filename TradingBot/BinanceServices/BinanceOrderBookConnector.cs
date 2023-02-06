@@ -6,16 +6,16 @@ using TradingBot.BinanceServices.PayloadModels.Websockets;
 
 namespace TradingBot.BinanceServices
 {
-    public class BinanceConnectorWrapper : IBinanceConnectorWrapper
+    public class BinanceOrderBookConnector : IBinanceOrderBookConnector
     {
         private readonly string BaseUrl;
-        private readonly ILogger<IBinanceConnectorWrapper> _logger;
+        private readonly ILogger<IBinanceOrderBookConnector> _logger;
         private readonly FutureMarket _futureMarket;
         private ConcurrentQueue<string> messages = new ConcurrentQueue<string>();
         private ConcurrentQueue<DiffBookDepthStream> orderBookDiffMessages = new ConcurrentQueue<DiffBookDepthStream>();
 
         //this constructor uses as default address the production address specified in the documentation here https://binance-docs.github.io/apidocs/futures/en/#diff-book-depth-streams
-        public BinanceConnectorWrapper(ILogger<BinanceConnectorWrapper> logger, FutureMarket futureMarket, string baseUrl = "wss://fstream.binance.com")
+        public BinanceOrderBookConnector(ILogger<BinanceOrderBookConnector> logger, FutureMarket futureMarket, string baseUrl = "wss://fstream.binance.com")
         {
             this.BaseUrl = baseUrl;
             this._logger = logger;

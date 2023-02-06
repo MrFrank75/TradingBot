@@ -13,7 +13,7 @@ namespace TradingBot.OrderBookHeatingMap
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) => {
                     services.AddTransient<OrderBookHeatingMapGenerator>();
-                    services.AddTransient<IBinanceConnectorWrapper, BinanceConnectorWrapper>();
+                    services.AddTransient<IBinanceOrderBookConnector, BinanceOrderBookConnector>();
                     services.AddTransient<FutureMarket>();
                     services.AddTransient<IOrderBookBuilder, OrderBookBuilder>();
                     services.AddTransient<IOrderBook, BinanceOrderBook>();

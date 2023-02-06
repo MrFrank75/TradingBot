@@ -13,14 +13,14 @@ namespace TradingBot.Tests.Integration.CommonServices
         private readonly ILogger<OrderBookGoogleSheetUploader> _loggerGoogleSheetUploader;
         private readonly ILogger<BinanceOrderBook> _loggerOrderBook;
         private readonly ILogger<OrderBookBuilder> _loggerOrderBookBuilder;
-        private readonly ILogger<BinanceConnectorWrapper> _loggerBinanceConnector;
+        private readonly ILogger<BinanceOrderBookConnector> _loggerBinanceConnector;
 
         public OrderBookGoogleSheetUploaderTest(ITestOutputHelper testOutputHelper)
         {
             _loggerGoogleSheetUploader = XUnitLogger.CreateLogger<OrderBookGoogleSheetUploader>(testOutputHelper);
             _loggerOrderBook = XUnitLogger.CreateLogger<BinanceOrderBook>(testOutputHelper);
             _loggerOrderBookBuilder = XUnitLogger.CreateLogger<OrderBookBuilder>(testOutputHelper);
-            _loggerBinanceConnector = XUnitLogger.CreateLogger<BinanceConnectorWrapper>(testOutputHelper);
+            _loggerBinanceConnector = XUnitLogger.CreateLogger<BinanceOrderBookConnector>(testOutputHelper);
         }
 
         [Fact(Skip ="Used only for manual generation of the heating map")]
@@ -30,7 +30,7 @@ namespace TradingBot.Tests.Integration.CommonServices
 
             //ARRANGE
             var cancellationTokenSource = new CancellationTokenSource();
-            var binanceConnectorWrapper = new BinanceConnectorWrapper(_loggerBinanceConnector, new FutureMarket(), PRODUCTION_ADDRESS_FOR_FUTURES_WEBSOCKET_STREAM);
+            var binanceConnectorWrapper = new BinanceOrderBookConnector(_loggerBinanceConnector, new FutureMarket(), PRODUCTION_ADDRESS_FOR_FUTURES_WEBSOCKET_STREAM);
             var symbol = "BTCUSDT";
             var tasks = new List<Task>();
             var binanceOrderBook = new BinanceOrderBook(_loggerOrderBook, binanceConnectorWrapper, new OrderBookBuilder(_loggerOrderBookBuilder));

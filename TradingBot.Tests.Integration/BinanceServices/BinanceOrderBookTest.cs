@@ -10,13 +10,13 @@ namespace TradingBot.Tests.Integration.BinanceServices
     {
         private readonly ILogger<BinanceOrderBook> _logger;
         private ILogger<OrderBookBuilder> _orderBookBuilderLogger;
-        private readonly ILogger<BinanceConnectorWrapper> _loggerConnector;
+        private readonly ILogger<BinanceOrderBookConnector> _loggerConnector;
 
         public BinanceOrderBookTest(ITestOutputHelper testOutputHelper)
         {
             _logger = XUnitLogger.CreateLogger<BinanceOrderBook>(testOutputHelper);
             _orderBookBuilderLogger = XUnitLogger.CreateLogger<OrderBookBuilder>(testOutputHelper);
-            _loggerConnector = XUnitLogger.CreateLogger<BinanceConnectorWrapper>(testOutputHelper);
+            _loggerConnector = XUnitLogger.CreateLogger<BinanceOrderBookConnector>(testOutputHelper);
         }
 
         
@@ -27,7 +27,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
 
             //ARRANGE
             var cancellationTokenSource = new CancellationTokenSource();
-            var binanceConnectorWrapper = new BinanceConnectorWrapper(_loggerConnector, new FutureMarket());
+            var binanceConnectorWrapper = new BinanceOrderBookConnector(_loggerConnector, new FutureMarket());
             var orderBookConverter = new DummyOrderBookConverter();
             var symbol = "BTCUSDT";
             var tasks = new List<Task>();
@@ -60,7 +60,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
 
             //ARRANGE
             var cancellationTokenSource = new CancellationTokenSource();
-            var binanceConnectorWrapper = new BinanceConnectorWrapper(_loggerConnector, new FutureMarket());
+            var binanceConnectorWrapper = new BinanceOrderBookConnector(_loggerConnector, new FutureMarket());
             var orderBookConverter = new DummyOrderBookConverter();
             var symbol = "BTCUSDT";
             var tasks = new List<Task>();
@@ -94,7 +94,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
 
             //ARRANGE
             var cancellationTokenSource = new CancellationTokenSource();
-            var binanceConnectorWrapper = new BinanceConnectorWrapper(_loggerConnector, new FutureMarket(), "wss://fstream.binance.com");
+            var binanceConnectorWrapper = new BinanceOrderBookConnector(_loggerConnector, new FutureMarket(), "wss://fstream.binance.com");
             var symbol = "BTCUSDT";
             var tasks = new List<Task>();
             var sut = new BinanceOrderBook(_logger, binanceConnectorWrapper, new OrderBookBuilder(_orderBookBuilderLogger));

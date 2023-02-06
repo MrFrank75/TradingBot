@@ -12,9 +12,9 @@ namespace TradingBot.Controllers
     public class TradingViewController : ControllerBase
     {
         private readonly ILogger<TradingViewController> _logger;
-        private readonly IBinanceConnectorWrapper binanceConnector;
+        private readonly IBinanceOrderBookConnector binanceConnector;
 
-        public TradingViewController(ILogger<TradingViewController> logger, IBinanceConnectorWrapper binanceConnector)
+        public TradingViewController(ILogger<TradingViewController> logger, IBinanceOrderBookConnector binanceConnector)
         {
             _logger = logger;
             this.binanceConnector = binanceConnector;

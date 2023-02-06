@@ -4,7 +4,7 @@ using TradingBot.BinanceServices.PayloadModels.Websockets;
 
 namespace TradingBot.BinanceServices
 {
-    public interface IBinanceConnectorWrapper
+    public interface IBinanceOrderBookConnector
     {
         ConcurrentQueue<DiffBookDepthStream> OrderBookDiffMessages { get; }
 
