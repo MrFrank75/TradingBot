@@ -11,7 +11,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
         {
         }
 
-        [Fact]
+        [Fact(Skip ="Careful. This test open real orders")]
         public async void CanOpenNewOrder() {
 
             if (File.Exists("BinanceApiKeys.txt") == false)

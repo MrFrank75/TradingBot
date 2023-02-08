@@ -1,5 +1,6 @@
 
 using TradingBot.BinanceServices;
+using TradingBot.TradingServices;
 
 namespace TradingBot
 {
@@ -15,7 +16,10 @@ namespace TradingBot
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<IBinanceOrderBookConnector, BinanceOrderBookConnector>();
+            builder.Services.AddSingleton<ITradesExecutor, TradesExecutor>();
+            builder.Services.AddTransient<IBinanceOrderBookConnector, BinanceOrderBookConnector>();
+            builder.Services.AddTransient<FutureMarket>();
+
 
             var app = builder.Build();
 
