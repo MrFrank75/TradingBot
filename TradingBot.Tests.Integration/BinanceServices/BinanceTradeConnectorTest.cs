@@ -8,11 +8,11 @@ namespace TradingBot.Tests.Integration.BinanceServices
     public class BinanceTradeConnectorTest
     {
 
-        private readonly ILogger<BinanceTradeConnector> _logger;
+        private readonly ILogger<BinanceBrokerConnector> _logger;
 
         public BinanceTradeConnectorTest(ITestOutputHelper testOutputHelper)
         {
-            _logger = XUnitLogger.CreateLogger<BinanceTradeConnector>(testOutputHelper);
+            _logger = XUnitLogger.CreateLogger<BinanceBrokerConnector>(testOutputHelper);
         }
 
 
@@ -27,7 +27,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
             var apiSecret = apiKeyAndSecret[1];
 
             var futureMarket = new FutureMarket(apiKey: apiKey, apiSecret: apiSecret);
-            var sut = new BinanceTradeConnector(_logger, futureMarket);
+            var sut = new BinanceBrokerConnector(_logger, futureMarket);
 
             var singleOrder = await sut.GetOpenOrders("LTCUSDT");
             Assert.NotNull(singleOrder);
@@ -44,7 +44,7 @@ namespace TradingBot.Tests.Integration.BinanceServices
             var apiSecret = apiKeyAndSecret[1];
 
             var futureMarket = new FutureMarket(apiKey: apiKey, apiSecret: apiSecret);
-            var sut = new BinanceTradeConnector(_logger, futureMarket);
+            var sut = new BinanceBrokerConnector(_logger, futureMarket);
 
             var listOfOrders = await sut.GetAllOpenOrders();
             Assert.NotNull(listOfOrders);

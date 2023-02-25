@@ -5,6 +5,8 @@ namespace TradingBot.TradingServices
     public interface ITradesExecutor
     {
         bool Start();
-        bool OpenNewOrder(string symbol, OrderSide side, decimal quantity, decimal price, OrderType orderType);
+        Task<bool> OpenPosition(string symbol, decimal quantity, decimal price, OrderSide orderSide, OrderType orderType);
+        Task<bool> ClosePositionLongAtMarket(string symbol);
+        Task<bool> ClosePositionShortAtMarket(string symbol);
     }
 }

@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TradingBot.BinanceServices.PayloadModels.Websockets;
+using TradingBot.Models;
+using TradingBot.TradingServices;
 
 namespace TradingBot.BinanceServices.PayloadModels.API
 {
-
     public class BinanceOrder
     {
         public string avgPrice { get; set; }
@@ -17,6 +18,7 @@ namespace TradingBot.BinanceServices.PayloadModels.API
         public string price { get; set; }
         public bool reduceOnly { get; set; }
         public string side { get; set; }
+
         public string positionSide { get; set; }
         public string status { get; set; }
         public string stopPrice { get; set; }

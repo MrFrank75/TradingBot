@@ -4,6 +4,7 @@ using System.Net.Mime;
 using System.Net.WebSockets;
 using System.Text;
 using TradingBot.BinanceServices;
+using TradingBot.TradingServices;
 
 namespace TradingBot.Controllers
 {
@@ -12,12 +13,12 @@ namespace TradingBot.Controllers
     public class TradingViewController : ControllerBase
     {
         private readonly ILogger<TradingViewController> _logger;
-        private readonly IBinanceOrderBookConnector binanceConnector;
+        private readonly ITradesExecutor _tradesExecutor;
 
-        public TradingViewController(ILogger<TradingViewController> logger, IBinanceOrderBookConnector binanceConnector)
+        public TradingViewController(ILogger<TradingViewController> logger, ITradesExecutor tradesExecutor)
         {
             _logger = logger;
-            this.binanceConnector = binanceConnector;
+            _tradesExecutor = tradesExecutor;
         }
 
         [HttpGet]

@@ -7,8 +7,8 @@
             this.Value = value;
         }
 
-        public static OrderSide BUY { get => new OrderSide("BUY"); }
-        public static OrderSide SELL { get => new OrderSide("SELL"); }
+        public static OrderSide LONG { get => new OrderSide("LONG"); }
+        public static OrderSide SHORT { get => new OrderSide("SHORT"); }
 
         public string Value { get; private set; }
 

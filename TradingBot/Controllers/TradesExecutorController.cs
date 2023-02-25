@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TradingBot.BinanceServices;
 using TradingBot.TradingServices;
 
 namespace TradingBot.Controllers
