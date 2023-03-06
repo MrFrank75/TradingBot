@@ -48,7 +48,8 @@ namespace TradingBot.TradingServices
 
         private async Task<bool> ClosePositionAtMarket(string symbol, OrderSide side)
         { 
-            //this might be wrong, here we should get the current POSITION not ORDERS, to be understood 
+            //TODO: verify what is coming back from the broker. This might be wrong, here we should get the current POSITION not ORDERS
+            // we need to understand what Binance means for order    
             var currentOpenOrderInfo = await _brokerConnector.GetOpenOrders(symbol);
 
             List<IOrder> longOrders = currentOpenOrderInfo.Where(order => order.Side == side).ToList();

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Binance.Spot.Models;
+using Newtonsoft.Json;
 using TradingBot.BinanceServices.PayloadModels.API;
 using TradingBot.Models;
 using TradingBot.TradingServices;
@@ -39,9 +40,33 @@ namespace TradingBot.BinanceServices
             return orders;
         }
 
-        public async Task<BrokerConnectorReturnErrorCode> OpenNewOrder(string symbol, OrderSide side, decimal quantity, decimal price, OrderType orderType)
+        public async Task<BrokerConnectorReturnErrorCode> OpenNewOrder(string symbol, OrderSide side, decimal quantity, decimal price, Models.OrderType orderType)
+        {
+            _futureMarket.NewOrder(symbol,
+                side.FromOrderSide(),
+                orderType.FromOrderType(),
+                quantity = quantity,
+                price = price);
+            throw new NotImplementedException();
+        }
+
+        public Task<BrokerConnectorReturnErrorCode> OpenNewOrderAtMarket(string symbol, OrderSide side, decimal quantity)
         {
             throw new NotImplementedException();
         }
+    }
+}
+
+
+public static class BinanceExtensions
+{
+    public static Side FromOrderSide(this TradingBot.Models.OrderSide side)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static Binance.Spot.Models.OrderType FromOrderType(this TradingBot.Models.OrderType type)
+    {
+        throw new NotImplementedException();
     }
 }

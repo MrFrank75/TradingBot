@@ -9,5 +9,7 @@ namespace TradingBot.TradingServices
 
         Task<IEnumerable<IOrder>> GetOpenOrders(string symbol);
         Task<BrokerConnectorReturnErrorCode> OpenNewOrder(string symbol, OrderSide side, decimal quantity, decimal price, OrderType orderType);
+
+        Task<BrokerConnectorReturnErrorCode> OpenNewOrderAtMarket(string symbol, OrderSide side, decimal quantity);
     }
 }

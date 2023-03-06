@@ -33,9 +33,36 @@ namespace TradingBot.Controllers
         {
             try
             {
-                _logger.LogInformation(jsonMessage.AssetId);
-                _logger.LogInformation(jsonMessage.UserId);
-                _logger.LogInformation(jsonMessage.TradeAction);
+                string assetId = jsonMessage.AssetId;
+                string userId = jsonMessage.UserId;
+                string tradeAction = jsonMessage.TradeAction;
+                string strPrice = jsonMessage.Price;
+
+                _logger.LogInformation(assetId);
+                _logger.LogInformation(userId);
+                _logger.LogInformation(tradeAction);
+                _logger.LogInformation(strPrice);
+
+                if (decimal.TryParse(strPrice, out var price) == false)
+                {
+                    string message = "It was not possible to parse and convert the required price";
+                    _logger.LogError(message);
+                    throw new ArgumentException(message);
+                }
+
+                decimal quantityUSD = 1000;
+
+                if (tradeAction == "open")
+                    _tradesExecutor.OpenPosition(assetId, quantityUSD, price, Models.OrderSide.LONG, Models.OrderType.LIMIT);
+                else if (tradeAction == "close")
+                    _tradesExecutor.ClosePositionLongAtMarket(assetId);
+                else
+                {
+                    string message = "Unable to parse the trade Action";
+                    _logger.LogError(message);
+                    return BadRequest(message);
+                }    
+
                 return Ok();
             }
             catch(Exception ex)
