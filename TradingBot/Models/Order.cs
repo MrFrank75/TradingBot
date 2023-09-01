@@ -2,6 +2,8 @@
 {
     public class Order : IOrder
     {
+        private decimal _quantity;
+
         public string side { get; set; }
 
         public OrderSide Side
@@ -14,6 +16,11 @@
                     return OrderSide.SHORT;
                 throw new NotSupportedException();
             }
+        }
+
+        public decimal Quantity
+        {
+            get => _quantity; set => _quantity = value;
         }
     }
 }

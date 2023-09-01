@@ -63,7 +63,7 @@ namespace TradingBot.TradingServices
             //to close an order, at the low level, we open an order on the opposite side
             var oppositeSide = side == OrderSide.LONG ? OrderSide.SHORT : OrderSide.LONG; 
 
-            BrokerConnectorReturnErrorCode returnErrorCode = await _brokerConnector.OpenNewOrder(symbol,oppositeSide, orderToClose.Quantity, OrderType.MARKET);
+            BrokerConnectorReturnErrorCode returnErrorCode = await _brokerConnector.OpenNewOrderAtMarket(symbol,oppositeSide, orderToClose.Quantity);
             if (returnErrorCode == BrokerConnectorReturnErrorCode.SUCCESS)
             {
                 return true;

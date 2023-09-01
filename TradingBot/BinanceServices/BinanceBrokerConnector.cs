@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using TradingBot.BinanceServices.PayloadModels.API;
 using TradingBot.Models;
+using TradingBot.OrderBook;
 using TradingBot.TradingServices;
 
 namespace TradingBot.BinanceServices
@@ -40,19 +41,21 @@ namespace TradingBot.BinanceServices
             return orders;
         }
 
-        public async Task<BrokerConnectorReturnErrorCode> OpenNewOrder(string symbol, OrderSide side, decimal quantity, decimal price, Models.OrderType orderType)
+        public async Task<BrokerConnectorReturnErrorCode> OpenNewOrder(string symbol, OrderSide side, decimal quantity,decimal? price, Models.OrderType orderType)
         {
-            _futureMarket.NewOrder(symbol,
+            var stringResult = await _futureMarket.NewOrder(symbol,
                 side.FromOrderSide(),
                 orderType.FromOrderType(),
-                quantity = quantity,
-                price = price);
-            throw new NotImplementedException();
+                timeInForce: null,
+                quantity: quantity,
+                price: price) ;
+
+            return BrokerConnectorReturnErrorCode.SUCCESS;
         }
 
         public Task<BrokerConnectorReturnErrorCode> OpenNewOrderAtMarket(string symbol, OrderSide side, decimal quantity)
         {
-            throw new NotImplementedException();
+            return OpenNewOrder(symbol, side, quantity, null, Models.OrderType.MARKET);
         }
     }
 }
